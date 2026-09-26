@@ -460,7 +460,7 @@
 
         <!-- Page 4: Icon Guide -->
         <div id="page-icon-guide" class="page">
-            <h3 style="font-size:0.85rem; margin-bottom:12px; text-transform:uppercase; color:var(--text-muted);">In Use</h3>
+            <h3 style="font-size:0.85rem; margin-bottom:12px; text-transform:uppercase; color:var(--text-muted);">Defined in Configs (JSON)</h3>
             <div id="used-icons-container" class="icon-guide-grid"></div>
 
             <hr style="border:none; border-top:1px dashed var(--border-color); margin:20px 0;" />
@@ -552,37 +552,67 @@
 </div>
 
 <script>
-    // Configuration placeholders to be loaded dynamically from JSON files[cite: 1]
     let PAYMENT_SOURCES_CONFIG = [];
     let CATEGORIES_CONFIG = {};
 
-    // Dynamic Icon Mappings initialized for loaded subcategories and sources[cite: 1]
     const ICON_MAP = {
-        // Needs
+        // Current / Standard Mappings[cite: 1]
         "Rent": { icon: "fa-house", bg: "#d1fae5", color: "#059669" },
         "Groceries": { icon: "fa-basket-shopping", bg: "#d1fae5", color: "#059669" },
         "Bills": { icon: "fa-file-invoice-dollar", bg: "#d1fae5", color: "#059669" },
-
-        // Wants
         "Clothing": { icon: "fa-shirt", bg: "#fef3c7", color: "#d97706" },
         "Eating out": { icon: "fa-utensils", bg: "#fef3c7", color: "#d97706" },
         "Travel": { icon: "fa-plane", bg: "#fef3c7", color: "#d97706" },
         "Subscriptions": { icon: "fa-tv", bg: "#fef3c7", color: "#d97706" },
         "Electronics": { icon: "fa-laptop", bg: "#fef3c7", color: "#d97706" },
         "Shopping": { icon: "fa-bag-shopping", bg: "#fef3c7", color: "#d97706" },
-
-        // Savings
         "FD": { icon: "fa-landmark", bg: "#dbeafe", color: "#2563eb" },
         "Mutual/Index Fund": { icon: "fa-chart-line", bg: "#dbeafe", color: "#2563eb" },
         "Bank": { icon: "fa-piggy-bank", bg: "#dbeafe", color: "#2563eb" },
         "Pension": { icon: "fa-vault", bg: "#dbeafe", color: "#2563eb" },
-
-        // Payment Sources[cite: 1]
         "Cash": { icon: "fa-money-bill-wave", bg: "#e0e7ff", color: "#4f46e5" },
         "SBI CC": { icon: "fa-credit-card", bg: "#fce7f3", color: "#db2777" },
         "ICICI CC": { icon: "fa-credit-card", bg: "#ffedd5", color: "#ea580c" },
         "AXIS CC": { icon: "fa-credit-card", bg: "#ccfbf1", color: "#0d9488" },
-        "Default": { icon: "fa-receipt", bg: "#f3f4f6", color: "#4b5563" }
+        "Default": { icon: "fa-receipt", bg: "#f3f4f6", color: "#4b5563" },
+
+        // Additional Needs Mappings
+        "Electricity": { icon: "fa-bolt", bg: "#d1fae5", color: "#059669" },
+        "Water": { icon: "fa-droplet", bg: "#d1fae5", color: "#059669" },
+        "Internet": { icon: "fa-wifi", bg: "#d1fae5", color: "#059669" },
+        "Fuel": { icon: "fa-gas-pump", bg: "#d1fae5", color: "#059669" },
+        "Medicines": { icon: "fa-pills", bg: "#d1fae5", color: "#059669" },
+        "Doctor/Hospital": { icon: "fa-user-doctor", bg: "#d1fae5", color: "#059669" },
+        "Insurance": { icon: "fa-shield-halved", bg: "#d1fae5", color: "#059669" },
+        "Education/Tuition": { icon: "fa-graduation-cap", bg: "#d1fae5", color: "#059669" },
+        "Maintenance": { icon: "fa-wrench", bg: "#d1fae5", color: "#059669" },
+        "Childcare": { icon: "fa-baby", bg: "#d1fae5", color: "#059669" },
+
+        // Additional Wants Mappings
+        "Coffee": { icon: "fa-mug-hot", bg: "#fef3c7", color: "#d97706" },
+        "Movies/Cinema": { icon: "fa-film", bg: "#fef3c7", color: "#d97706" },
+        "Gym/Fitness": { icon: "fa-dumbbell", bg: "#fef3c7", color: "#d97706" },
+        "Gifts": { icon: "fa-gift", bg: "#fef3c7", color: "#d97706" },
+        "Beauty/Salon": { icon: "fa-scissors", bg: "#fef3c7", color: "#d97706" },
+        "Books": { icon: "fa-book", bg: "#fef3c7", color: "#d97706" },
+        "Gaming": { icon: "fa-gamepad", bg: "#fef3c7", color: "#d97706" },
+        "Pets": { icon: "fa-dog", bg: "#fef3c7", color: "#d97706" },
+        "Parties/Bar": { icon: "fa-wine-glass", bg: "#fef3c7", color: "#d97706" },
+        "Vacation": { icon: "fa-umbrella-beach", bg: "#fef3c7", color: "#d97706" },
+
+        // Additional Savings & Investments Mappings
+        "Gold/SGB": { icon: "fa-coins", bg: "#dbeafe", color: "#2563eb" },
+        "Stocks/Equity": { icon: "fa-arrow-trend-up", bg: "#dbeafe", color: "#2563eb" },
+        "Crypto": { icon: "fa-bitcoin-sign", bg: "#dbeafe", color: "#2563eb" },
+        "Emergency Fund": { icon: "fa-life-ring", bg: "#dbeafe", color: "#2563eb" },
+        "Real Estate": { icon: "fa-building", bg: "#dbeafe", color: "#2563eb" },
+
+        // Additional Payment Sources Mappings
+        "UPI": { icon: "fa-qrcode", bg: "#e0e7ff", color: "#4f46e5" },
+        "HDFC CC": { icon: "fa-credit-card", bg: "#fce7f3", color: "#db2777" },
+        "Amex CC": { icon: "fa-credit-card", bg: "#dcfce7", color: "#16a34a" },
+        "Net Banking": { icon: "fa-network-wired", bg: "#e0e7ff", color: "#4f46e5" },
+        "Debit Card": { icon: "fa-id-card", bg: "#fef3c7", color: "#d97706" }
     };
 
     const DEFAULT_CSV =
@@ -654,7 +684,6 @@
     const formExpense = document.getElementById('form-expense');
     const btnDelete = document.getElementById('btn-delete');
 
-    // Load expenses.json and sources.json from the same relative directory[cite: 1]
     async function loadConfigs() {
         try {
             const [expensesRes, sourcesRes] = await Promise.all([
@@ -906,33 +935,41 @@
         usedContainer.innerHTML = '';
         unusedContainer.innerHTML = '';
 
-        const usedKeys = new Set();
-        state.expenses.forEach(item => {
-            if (item.subcategory) usedKeys.add(item.subcategory);
-            if (item.source) usedKeys.add(item.source);
+        const definedKeys = new Set();
+        Object.keys(CATEGORIES_CONFIG).forEach(type => {
+            CATEGORIES_CONFIG[type].forEach(sub => definedKeys.add(sub));
         });
+        PAYMENT_SOURCES_CONFIG.forEach(src => definedKeys.add(src));
 
         Object.keys(ICON_MAP).forEach(key => {
             if (key === 'Default') return;
             const meta = ICON_MAP[key];
             const card = document.createElement('div');
             card.className = 'icon-guide-card';
-            card.innerHTML = `
-        <div class="icon-badge" style="width:36px; height:36px; font-size:1rem; background:${meta.bg}; color:${meta.color}; border-radius:50%;">
-          <i class="fa-solid ${meta.icon}"></i>
-        </div>
-        <div class="label">${key}</div>
-      `;
 
-            if (usedKeys.has(key)) {
+            if (definedKeys.has(key)) {
+                card.innerHTML = `
+                    <div class="icon-badge" style="width:36px; height:36px; font-size:1rem; background:${meta.bg}; color:${meta.color}; border-radius:50%;">
+                        <i class="fa-solid ${meta.icon}"></i>
+                    </div>
+                    <div class="label">${key}</div>
+                `;
                 usedContainer.appendChild(card);
             } else {
+                card.style.opacity = '0.5';
+                card.style.filter = 'grayscale(100%)';
+                card.innerHTML = `
+                    <div class="icon-badge" style="width:36px; height:36px; font-size:1rem; background:#e5e7eb; color:#6b7280; border-radius:50%;">
+                        <i class="fa-solid ${meta.icon}"></i>
+                    </div>
+                    <div class="label" style="color:#6b7280;">${key}</div>
+                `;
                 unusedContainer.appendChild(card);
             }
         });
 
         if (usedContainer.children.length === 0) {
-            usedContainer.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem; grid-column:1/-1;">No mapped icons currently in use.</div>`;
+            usedContainer.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem; grid-column:1/-1;">No mappings currently defined in JSON configuration.</div>`;
         }
     }
 
