@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Lightweight Expense Tracker</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Chart.js for Pie Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --needs-color: #10b981;
+            --needs-bg: #d1fae5;
+            --wants-color: #f59e0b;
+            --wants-bg: #fef3c7;
+            --savings-color: #3b82f6;
+            --savings-bg: #dbeafe;
+            --primary-color: #6366f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--card-bg);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Bar */
+        header {
+            height: 60px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--text-main);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:active {
+            background-color: var(--border-color);
+        }
+
+        /* Navigation Drawer Sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 20;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: #ffffff;
+            z-index: 30;
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 12px 0;
+        }
+
+        .sidebar-menu li {
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        .sidebar-menu li:hover, .sidebar-menu li.active {
+            background: var(--bg-color);
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Monthly Expenses Cards */
+        .expense-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .expense-item:active {
+            transform: scale(0.98);
+        }
+
+        .expense-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .expense-details .title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .expense-details .sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .expense-amount {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* Floating Action Button (FAB) - Bottom Left */
+        .fab-add {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Forms & Selections */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Icon Selection Grids */
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .title-needs { background: var(--needs-bg); color: var(--needs-color); }
+        .title-wants { background: var(--wants-bg); color: var(--wants-color); }
+        .title-savings { background: var(--savings-bg); color: var(--savings-color); }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .grid-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 4px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .grid-btn i {
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+
+        .grid-btn span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .grid-btn.selected {
+            border-color: var(--primary-color);
+            background-color: #f0f0ff;
+        }
+
+        /* Modal / Add View */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: white;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Charts styling */
+        .chart-container {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- Header -->
+    <header>
+        <button class="icon-btn" id="btn-menu"><i class="fa-solid fa-bars"></i></button>
+        <h1 id="page-title">Monthly Expenses</h1>
+        <button class="icon-btn" id="btn-refresh" title="Refresh CSV Data"><i class="fa-solid fa-rotate-right"></i></button>
+    </header>
+
+    <!-- Navigation Drawer -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Expense Tracker</h2>
+            <p style="font-size:0.8rem; opacity:0.8;">Lightweight & Fast</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li data-page="page-monthly" class="active"><i class="fa-solid fa-calendar-days"></i> Monthly Expenses</li>
+            <li data-page="page-all-time"><i class="fa-solid fa-vault"></i> All Months Total</li>
+            <li data-page="page-breakdown"><i class="fa-solid fa-chart-pie"></i> Expense Breakdown</li>
+        </ul>
+    </aside>
+
+    <!-- Main View Container -->
+    <main>
+        <!-- Page 1: Monthly Expenses -->
+        <div id="page-monthly" class="page active">
+            <div id="monthly-expense-list"></div>
+        </div>
+
+        <!-- Page 2: Total Expenses Across All Months -->
+        <div id="page-all-time" class="page">
+            <div class="summary-card">
+                <div style="font-size:0.85rem; opacity:0.9;">Total All-Time Expenses</div>
+                <div id="all-time-total" style="font-size:2rem; font-weight:800; margin-top:4px;">₹0.00</div>
+            </div>
+            <div id="all-time-monthly-list"></div>
+        </div>
+
+        <!-- Page 3: Expense Breakdown (Pie Charts) -->
+        <div id="page-breakdown" class="page">
+            <div class="chart-container">
+                <h3 style="font-size:0.9rem; margin-bottom:12px; text-transform:uppercase; color:var(--text-muted);">Expenses per Category</h3>
+                <canvas id="chart-category"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 style="font-size:0.9rem; margin-bottom:12px; text-transform:uppercase; color:var(--text-muted);">Expenses per Source</h3>
+                <canvas id="chart-source"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Left Floating Add Button -->
+    <button class="fab-add" id="btn-open-add"><i class="fa-solid fa-plus"></i></button>
+
+    <!-- Add/Edit Expense Modal View (Feature 5: Amount, Date, Needs/Wants/Savings Grid, Payment Source Grid, NO TITLE) -->
+    <div class="modal" id="modal-expense">
+        <div class="modal-header">
+            <h2 id="modal-title" style="font-size:1.1rem;">Add Expense</h2>
+            <button class="icon-btn" id="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="form-expense" style="padding: 16px;">
+            <input type="hidden" id="expense-id" />
+
+            <!-- Amount Input -->
+            <div class="form-group">
+                <label class="form-label" for="expense-amount">Amount (₹)</label>
+                <input type="number" step="0.01" class="form-input" id="expense-amount" placeholder="0.00" required autofocus />
+            </div>
+
+            <!-- Date Input -->
+            <div class="form-group">
+                <label class="form-label" for="expense-date">Date</label>
+                <input type="date" class="form-input" id="expense-date" required />
+            </div>
+
+            <!-- Categories Selection Grid (Needs, Wants, Savings) -->
+            <div class="form-group">
+                <label class="form-label">Category & Subcategory</label>
+
+                <div class="section-title title-needs">NEEDS</div>
+                <div class="grid-options" id="grid-needs"></div>
+
+                <div class="section-title title-wants">WANTS</div>
+                <div class="grid-options" id="grid-wants"></div>
+
+                <div class="section-title title-savings">SAVINGS</div>
+                <div class="grid-options" id="grid-savings"></div>
+            </div>
+
+            <!-- Payment Source Grid -->
+            <div class="form-group">
+                <label class="form-label">Payment Source</label>
+                <div class="grid-options" id="grid-sources"></div>
+            </div>
+
+            <button type="submit" class="save-btn" id="btn-save">Save Expense</button>
+            <button type="button" id="btn-delete" class="save-btn" style="background:#ef4444; margin-top:8px; display:none;">Delete Expense</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    /**
+     * INITIAL CONFIGURATIONS & JSON MAPPINGS
+     */
+
+        // Payment sources initialized from configuration
+    const PAYMENT_SOURCES_CONFIG = [
+            "Cash",
+            "SBI CC",
+            "ICICI CC",
+            "AXIS CC"
+        ];
+
+    // Category & Subcategory definitions
+    const CATEGORIES_CONFIG = {
+        Needs: ["Groceries", "Rent", "Utilities", "Transport", "Health", "Fuel", "Bills"],
+        Wants: ["Dining", "Entertainment", "Shopping", "Travel", "Hobbies", "Subscriptions"],
+        Savings: ["Emergency", "Investments", "Stocks", "Mutual Funds", "Gold"]
+    };
+
+    // Pre-mapped Icon Dictionary (Hundreds of mapped subcategories & sources with distinct color styles)
+    const ICON_MAP = {
+        // Needs
+        "Groceries": { icon: "fa-basket-shopping", bg: "#d1fae5", color: "#059669" },
+        "Rent": { icon: "fa-house", bg: "#d1fae5", color: "#059669" },
+        "Utilities": { icon: "fa-bolt", bg: "#d1fae5", color: "#059669" },
+        "Transport": { icon: "fa-bus", bg: "#d1fae5", color: "#059669" },
+        "Health": { icon: "fa-heart-pulse", bg: "#d1fae5", color: "#059669" },
+        "Fuel": { icon: "fa-gas-pump", bg: "#d1fae5", color: "#059669" },
+        "Bills": { icon: "fa-file-invoice-dollar", bg: "#d1fae5", color: "#059669" },
+
+        // Wants
+        "Dining": { icon: "fa-utensils", bg: "#fef3c7", color: "#d97706" },
+        "Entertainment": { icon: "fa-film", bg: "#fef3c7", color: "#d97706" },
+        "Shopping": { icon: "fa-bag-shopping", bg: "#fef3c7", color: "#d97706" },
+        "Travel": { icon: "fa-plane", bg: "#fef3c7", color: "#d97706" },
+        "Hobbies": { icon: "fa-gamepad", bg: "#fef3c7", color: "#d97706" },
+        "Subscriptions": { icon: "fa-tv", bg: "#fef3c7", color: "#d97706" },
+
+        // Savings
+        "Emergency": { icon: "fa-piggy-bank", bg: "#dbeafe", color: "#2563eb" },
+        "Investments": { icon: "fa-chart-line", bg: "#dbeafe", color: "#2563eb" },
+        "Stocks": { icon: "fa-arrow-trend-up", bg: "#dbeafe", color: "#2563eb" },
+        "Mutual Funds": { icon: "fa-vault", bg: "#dbeafe", color: "#2563eb" },
+        "Gold": { icon: "fa-coins", bg: "#dbeafe", color: "#2563eb" },
+
+        // Payment Sources
+        "Cash": { icon: "fa-money-bill-wave", bg: "#e0e7ff", color: "#4f46e5" },
+        "SBI CC": { icon: "fa-credit-card", bg: "#fce7f3", color: "#db2777" },
+        "ICICI CC": { icon: "fa-credit-card", bg: "#ffedd5", color: "#ea580c" },
+        "AXIS CC": { icon: "fa-credit-card", bg: "#ccfbf1", color: "#0d9488" },
+        "Default": { icon: "fa-receipt", bg: "#f3f4f6", color: "#4b5563" }
+    };
+
+    /**
+     * FEATURE 8: STUB ENDPOINTS (CSV API)
+     */
+    const DEFAULT_CSV =
+        `id,date,amount,type,subcategory,source
+1,2026-09-25,450.00,Needs,Groceries,SBI CC
+2,2026-09-24,1200.00,Wants,Dining,ICICI CC
+3,2026-09-20,5000.00,Savings,Mutual Funds,AXIS CC
+4,2026-09-15,350.00,Needs,Fuel,Cash
+5,2026-08-10,2500.00,Wants,Shopping,SBI CC`;
+
+    const ApiStub = {
+        // Endpoint: GET /api/expenses (Returns CSV string)
+        async fetchExpensesCSV() {
+            const stored = localStorage.getItem('expenses_csv');
+            if (!stored) {
+                localStorage.setItem('expenses_csv', DEFAULT_CSV.trim());
+                return DEFAULT_CSV.trim();
+            }
+            return stored;
+        },
+
+        // Endpoint: POST /api/expenses (Receives CSV string)
+        async saveExpensesCSV(csvString) {
+            localStorage.setItem('expenses_csv', csvString.trim());
+            return { status: 200, message: "CSV updated successfully" };
+        }
+    };
+
+    /**
+     * CSV UTILITIES
+     */
+    function parseCSV(csvText) {
+        const lines = csvText.trim().split('\n');
+        if (lines.length <= 1) return [];
+        const headers = lines[0].split(',').map(h => h.trim());
+
+        return lines.slice(1).map(line => {
+            const values = line.split(',').map(v => v.trim());
+            let obj = {};
+            headers.forEach((h, i) => obj[h] = values[i]);
+            obj.amount = parseFloat(obj.amount) || 0;
+            return obj;
+        });
+    }
+
+    function convertToCSV(dataArray) {
+        const headers = ["id", "date", "amount", "type", "subcategory", "source"];
+        const rows = dataArray.map(item =>
+            [item.id, item.date, item.amount.toFixed(2), item.type, item.subcategory, item.source].join(',')
+        );
+        return [headers.join(','), ...rows].join('\n');
+    }
+
+    /**
+     * APP STATE & DOM REFS
+     */
+    let state = {
+        expenses: [],
+        selectedCategory: null,
+        selectedSubcategory: null,
+        selectedType: null,
+        selectedSource: null,
+        editingId: null
+    };
+
+    let categoryChart = null;
+    let sourceChart = null;
+
+    // DOM Elements
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const btnMenu = document.getElementById('btn-menu');
+    const btnRefresh = document.getElementById('btn-refresh');
+    const modalExpense = document.getElementById('modal-expense');
+    const btnOpenAdd = document.getElementById('btn-open-add');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    const formExpense = document.getElementById('form-expense');
+    const btnDelete = document.getElementById('btn-delete');
+
+    /**
+     * INITIALIZATION
+     */
+    async function init() {
+        setupEventListeners();
+        buildFormGrids();
+        await loadDataFromStub();
+    }
+
+    async function loadDataFromStub() {
+        const csvData = await ApiStub.fetchExpensesCSV();
+        state.expenses = parseCSV(csvData);
+        renderCurrentPage();
+    }
+
+    async function syncDataToStub() {
+        const csvString = convertToCSV(state.expenses);
+        await ApiStub.saveExpensesCSV(csvString);
+        renderCurrentPage();
+    }
+
+    /**
+     * RENDER GRID OPTIONS FOR ADD/EDIT VIEW
+     */
+    function buildFormGrids() {
+        // Populate Needs, Wants, Savings
+        Object.keys(CATEGORIES_CONFIG).forEach(type => {
+            const container = document.getElementById(`grid-${type.toLowerCase()}`);
+            container.innerHTML = '';
+            CATEGORIES_CONFIG[type].forEach(sub => {
+                const meta = ICON_MAP[sub] || ICON_MAP.Default;
+                const btn = document.createElement('div');
+                btn.className = 'grid-btn';
+                btn.dataset.type = type;
+                btn.dataset.sub = sub;
+                btn.innerHTML = `<i class="fa-solid ${meta.icon}" style="color:${meta.color}"></i><span>${sub}</span>`;
+                btn.onclick = () => selectCategoryOption(btn, type, sub);
+                container.appendChild(btn);
+            });
+        });
+
+        // Populate Sources Grid[cite: 1]
+        const sourceContainer = document.getElementById('grid-sources');
+        sourceContainer.innerHTML = '';
+        PAYMENT_SOURCES_CONFIG.forEach(src => {
+            const meta = ICON_MAP[src] || ICON_MAP.Default;
+            const btn = document.createElement('div');
+            btn.className = 'grid-btn';
+            btn.dataset.source = src;
+            btn.innerHTML = `<i class="fa-solid ${meta.icon}" style="color:${meta.color}"></i><span>${src}</span>`;
+            btn.onclick = () => selectSourceOption(btn, src);
+            sourceContainer.appendChild(btn);
+        });
+    }
+
+    function selectCategoryOption(element, type, subcategory) {
+        document.querySelectorAll('#modal-expense .grid-btn[data-sub]').forEach(b => b.classList.remove('selected'));
+        element.classList.add('selected');
+        state.selectedType = type;
+        state.selectedSubcategory = subcategory;
+    }
+
+    function selectSourceOption(element, source) {
+        document.querySelectorAll('#grid-sources .grid-btn').forEach(b => b.classList.remove('selected'));
+        element.classList.add('selected');
+        state.selectedSource = source;
+    }
+
+    /**
+     * RENDER PAGES
+     */
+    function renderCurrentPage() {
+        const activePage = document.querySelector('.page.active').id;
+        if (activePage === 'page-monthly') renderMonthlyPage();
+        if (activePage === 'page-all-time') renderAllTimePage();
+        if (activePage === 'page-breakdown') renderBreakdownPage();
+    }
+
+    // Feature 6: Main Page showing expenses for current month
+    function renderMonthlyPage() {
+        const listEl = document.getElementById('monthly-expense-list');
+        listEl.innerHTML = '';
+
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth();
+
+        const monthlyExpenses = state.expenses.filter(item => {
+            const d = new Date(item.date);
+            return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
+        }).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        if (monthlyExpenses.length === 0) {
+            listEl.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);">No expenses recorded for this month.</div>`;
+            return;
+        }
+
+        monthlyExpenses.forEach(item => {
+            listEl.appendChild(createExpenseCard(item));
+        });
+    }
+
+    function renderAllTimePage() {
+        const totalEl = document.getElementById('all-time-total');
+        const listEl = document.getElementById('all-time-monthly-list');
+        listEl.innerHTML = '';
+
+        const grandTotal = state.expenses.reduce((sum, item) => sum + item.amount, 0);
+        totalEl.textContent = `₹${grandTotal.toFixed(2)}`;
+
+        // Group by month
+        const grouped = {};
+        state.expenses.forEach(item => {
+            const monthKey = item.date.substring(0, 7); // YYYY-MM
+            grouped[monthKey] = (grouped[monthKey] || 0) + item.amount;
+        });
+
+        Object.keys(grouped).sort().reverse().forEach(monthKey => {
+            const card = document.createElement('div');
+            card.className = 'expense-item';
+            card.style.cursor = 'default';
+            card.innerHTML = `
+        <div class="expense-left">
+          <div class="icon-badge" style="background:#e0e7ff; color:var(--primary-color);">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <div class="expense-details">
+            <div class="title">${monthKey}</div>
+          </div>
+        </div>
+        <div class="expense-amount">₹${grouped[monthKey].toFixed(2)}</div>
+      `;
+            listEl.appendChild(card);
+        });
+    }
+
+    // Feature 7: Pie Charts (Expenses per Source & per Category)
+    function renderBreakdownPage() {
+        const categoryTotals = { Needs: 0, Wants: 0, Savings: 0 };
+        const sourceTotals = {};
+
+        state.expenses.forEach(item => {
+            if (categoryTotals[item.type] !== undefined) categoryTotals[item.type] += item.amount;
+            sourceTotals[item.source] = (sourceTotals[item.source] || 0) + item.amount;
+        });
+
+        // Render Category Chart
+        if (categoryChart) categoryChart.destroy();
+        const ctxCat = document.getElementById('chart-category').getContext('2d');
+        categoryChart = new Chart(ctxCat, {
+            type: 'pie',
+            data: {
+                labels: ['Needs', 'Wants', 'Savings'],
+                datasets: [{
+                    data: [categoryTotals.Needs, categoryTotals.Wants, categoryTotals.Savings],
+                    backgroundColor: ['#10b981', '#f59e0b', '#3b82f6']
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // Render Source Chart
+        if (sourceChart) sourceChart.destroy();
+        const ctxSrc = document.getElementById('chart-source').getContext('2d');
+        const sourceLabels = Object.keys(sourceTotals);
+        const sourceData = Object.values(sourceTotals);
+        sourceChart = new Chart(ctxSrc, {
+            type: 'pie',
+            data: {
+                labels: sourceLabels,
+                datasets: [{
+                    data: sourceData,
+                    backgroundColor: ['#6366f1', '#ec4899', '#f97316', '#14b8a6', '#8b5cf6']
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+    }
+
+    function createExpenseCard(item) {
+        const meta = ICON_MAP[item.subcategory] || ICON_MAP.Default;
+        const card = document.createElement('div');
+        card.className = 'expense-item';
+
+        // Feature 9: Click to Edit Expense
+        card.onclick = () => openEditModal(item);
+
+        card.innerHTML = `
+      <div class="expense-left">
+        <div class="icon-badge" style="background:${meta.bg}; color:${meta.color};">
+          <i class="fa-solid ${meta.icon}"></i>
+        </div>
+        <div class="expense-details">
+          <div class="title">${item.subcategory}</div>
+          <div class="sub">
+            <span>${item.date}</span> •
+            <span style="font-weight:600;">${item.source}</span>
+          </div>
+        </div>
+      </div>
+      <div class="expense-amount">₹${item.amount.toFixed(2)}</div>
+    `;
+        return card;
+    }
+
+    /**
+     * MODAL & FORM HANDLERS
+     */
+    function openAddModal() {
+        state.editingId = null;
+        document.getElementById('modal-title').textContent = 'Add Expense';
+        document.getElementById('expense-id').value = '';
+        document.getElementById('expense-amount').value = '';
+        document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
+        btnDelete.style.display = 'none';
+
+        // Clear selections
+        document.querySelectorAll('.grid-btn').forEach(b => b.classList.remove('selected'));
+        state.selectedType = null;
+        state.selectedSubcategory = null;
+        state.selectedSource = null;
+
+        modalExpense.classList.add('active');
+    }
+
+    function openEditModal(item) {
+        state.editingId = item.id;
+        document.getElementById('modal-title').textContent = 'Edit Expense';
+        document.getElementById('expense-id').value = item.id;
+        document.getElementById('expense-amount').value = item.amount;
+        document.getElementById('expense-date').value = item.date;
+        btnDelete.style.display = 'block';
+
+        // Highlight Category
+        document.querySelectorAll('#modal-expense .grid-btn[data-sub]').forEach(b => {
+            b.classList.toggle('selected', b.dataset.sub === item.subcategory);
+        });
+        state.selectedType = item.type;
+        state.selectedSubcategory = item.subcategory;
+
+        // Highlight Source
+        document.querySelectorAll('#grid-sources .grid-btn').forEach(b => {
+            b.classList.toggle('selected', b.dataset.source === item.source);
+        });
+        state.selectedSource = item.source;
+
+        modalExpense.classList.add('active');
+    }
+
+    function closeModal() {
+        modalExpense.classList.remove('active');
+    }
+
+    /**
+     * EVENT LISTENERS
+     */
+    function setupEventListeners() {
+        // Menu Drawer
+        btnMenu.onclick = () => {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.add('active');
+        };
+        sidebarOverlay.onclick = closeSidebar;
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+        }
+
+        // Sidebar Nav Links
+        document.querySelectorAll('.sidebar-menu li').forEach(li => {
+            li.onclick = () => {
+                document.querySelectorAll('.sidebar-menu li').forEach(item => item.classList.remove('active'));
+                li.classList.add('active');
+
+                const targetPage = li.dataset.page;
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById(targetPage).classList.add('active');
+
+                // Update title
+                document.getElementById('page-title').textContent = li.textContent.trim();
+
+                closeSidebar();
+                renderCurrentPage();
+            };
+        });
+
+        // Feature 6: Manual Refresh Button
+        btnRefresh.onclick = async () => {
+            btnRefresh.querySelector('i').classList.add('fa-spin');
+            await loadDataFromStub();
+            setTimeout(() => btnRefresh.querySelector('i').classList.remove('fa-spin'), 400);
+        };
+
+        // FAB Button & Modal Close
+        btnOpenAdd.onclick = openAddModal;
+        btnCloseModal.onclick = closeModal;
+
+        // Save Expense
+        formExpense.onsubmit = async (e) => {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('expense-amount').value);
+            const date = document.getElementById('expense-date').value;
+
+            if (!state.selectedSubcategory || !state.selectedSource) {
+                alert("Please select a Category and a Payment Source.");
+                return;
+            }
+
+            if (state.editingId) {
+                // Edit existing
+                const index = state.expenses.findIndex(x => x.id == state.editingId);
+                if (index !== -1) {
+                    state.expenses[index] = {
+                        id: state.editingId,
+                        date,
+                        amount,
+                        type: state.selectedType,
+                        subcategory: state.selectedSubcategory,
+                        source: state.selectedSource
+                    };
+                }
+            } else {
+                // Add new
+                const newId = Date.now().toString();
+                state.expenses.push({
+                    id: newId,
+                    date,
+                    amount,
+                    type: state.selectedType,
+                    subcategory: state.selectedSubcategory,
+                    source: state.selectedSource
+                });
+            }
+
+            await syncDataToStub();
+            closeModal();
+        };
+
+        // Delete Expense
+        btnDelete.onclick = async () => {
+            if (state.editingId && confirm("Delete this expense?")) {
+                state.expenses = state.expenses.filter(x => x.id != state.editingId);
+                await syncDataToStub();
+                closeModal();
+            }
+        };
+    }
+
+    // Start Application
+    window.onload = init;
+</script>
+</body>
+</html>

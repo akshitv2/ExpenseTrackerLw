@@ -1,0 +1,21 @@
+{
+  "needs": [
+    "Rent",
+    "Groceries",
+    "Bills"
+  ],
+  "wants": [
+    "Clothing",
+    "Eating out",
+    "Travel",
+    "Subscriptions",
+    "Electronics",
+    "Shopping"
+  ],
+  "savings": [
+    "FD",
+    "Mutual/Index Fund",
+    "Bank",
+    "Pension"
+  ]
+}
