@@ -552,45 +552,18 @@
 </div>
 
 <script>
-    // Initialized payment sources[cite: 1]
-    const PAYMENT_SOURCES_CONFIG = [
-        "Cash",
-        "SBI CC",
-        "ICICI CC",
-        "AXIS CC"
-    ];
+    // Configuration placeholders to be loaded dynamically from JSON files[cite: 1]
+    let PAYMENT_SOURCES_CONFIG = [];
+    let CATEGORIES_CONFIG = {};
 
-    // Initialized categories initialized strictly from expenses.json[cite: 2]
-    const CATEGORIES_CONFIG = {
-        Needs: [
-            "Rent",
-            "Groceries",
-            "Bills"
-        ],
-        Wants: [
-            "Clothing",
-            "Eating out",
-            "Travel",
-            "Subscriptions",
-            "Electronics",
-            "Shopping"
-        ],
-        Savings: [
-            "FD",
-            "Mutual/Index Fund",
-            "Bank",
-            "Pension"
-        ]
-    };
-
-    // Icon mappings corresponding to expenses.json subcategories and sources[cite: 1, 2]
+    // Dynamic Icon Mappings initialized for loaded subcategories and sources[cite: 1]
     const ICON_MAP = {
-        // Needs[cite: 2]
+        // Needs
         "Rent": { icon: "fa-house", bg: "#d1fae5", color: "#059669" },
         "Groceries": { icon: "fa-basket-shopping", bg: "#d1fae5", color: "#059669" },
         "Bills": { icon: "fa-file-invoice-dollar", bg: "#d1fae5", color: "#059669" },
 
-        // Wants[cite: 2]
+        // Wants
         "Clothing": { icon: "fa-shirt", bg: "#fef3c7", color: "#d97706" },
         "Eating out": { icon: "fa-utensils", bg: "#fef3c7", color: "#d97706" },
         "Travel": { icon: "fa-plane", bg: "#fef3c7", color: "#d97706" },
@@ -598,7 +571,7 @@
         "Electronics": { icon: "fa-laptop", bg: "#fef3c7", color: "#d97706" },
         "Shopping": { icon: "fa-bag-shopping", bg: "#fef3c7", color: "#d97706" },
 
-        // Savings[cite: 2]
+        // Savings
         "FD": { icon: "fa-landmark", bg: "#dbeafe", color: "#2563eb" },
         "Mutual/Index Fund": { icon: "fa-chart-line", bg: "#dbeafe", color: "#2563eb" },
         "Bank": { icon: "fa-piggy-bank", bg: "#dbeafe", color: "#2563eb" },
@@ -681,7 +654,28 @@
     const formExpense = document.getElementById('form-expense');
     const btnDelete = document.getElementById('btn-delete');
 
+    // Load expenses.json and sources.json from the same relative directory[cite: 1]
+    async function loadConfigs() {
+        try {
+            const [expensesRes, sourcesRes] = await Promise.all([
+                fetch('./expenses.json'),
+                fetch('./sources.json')
+            ]);
+
+            if (expensesRes.ok) {
+                CATEGORIES_CONFIG = await expensesRes.json();
+            }
+
+            if (sourcesRes.ok) {
+                PAYMENT_SOURCES_CONFIG = await sourcesRes.json();
+            }
+        } catch (error) {
+            console.error("Failed to load JSON configurations:", error);
+        }
+    }
+
     async function init() {
+        await loadConfigs();
         setupEventListeners();
         buildFormRoundGrids();
         await loadDataFromStub();
@@ -702,6 +696,7 @@
     function buildFormRoundGrids() {
         Object.keys(CATEGORIES_CONFIG).forEach(type => {
             const container = document.getElementById(`grid-${type.toLowerCase()}`);
+            if (!container) return;
             container.innerHTML = '';
             CATEGORIES_CONFIG[type].forEach(sub => {
                 const meta = ICON_MAP[sub] || ICON_MAP.Default;
