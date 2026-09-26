@@ -88,28 +88,21 @@
             background-color: var(--border-color);
         }
 
-        /* Navigation Drawer Sidebar */
+        /* Sidebar Drawer */
         .sidebar-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.4);
             z-index: 20;
             display: none;
         }
 
-        .sidebar-overlay.active {
-            display: block;
-        }
+        .sidebar-overlay.active { display: block; }
 
         .sidebar {
             position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100%;
+            top: 0; left: -280px;
+            width: 280px; height: 100%;
             background: #ffffff;
             z-index: 30;
             transition: left 0.3s ease;
@@ -117,9 +110,7 @@
             flex-direction: column;
         }
 
-        .sidebar.open {
-            left: 0;
-        }
+        .sidebar.open { left: 0; }
 
         .sidebar-header {
             padding: 24px 20px;
@@ -147,19 +138,45 @@
             color: var(--primary-color);
         }
 
-        /* Main Container */
         main {
             flex: 1;
             padding: 16px;
             padding-bottom: 80px;
         }
 
-        .page {
-            display: none;
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Main Page Summary Grid */
+        .summary-category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
-        .page.active {
-            display: block;
+        .category-card {
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .category-card.needs { background: var(--needs-bg); color: var(--needs-color); }
+        .category-card.wants { background: var(--wants-bg); color: var(--wants-color); }
+        .category-card.savings { background: var(--savings-bg); color: var(--savings-color); }
+
+        .category-card .title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .category-card .val {
+            font-size: 0.95rem;
+            font-weight: 800;
         }
 
         /* Monthly Expenses Cards */
@@ -176,9 +193,7 @@
             transition: transform 0.1s;
         }
 
-        .expense-item:active {
-            transform: scale(0.98);
-        }
+        .expense-item:active { transform: scale(0.98); }
 
         .expense-left {
             display: flex;
@@ -189,7 +204,7 @@
         .icon-badge {
             width: 44px;
             height: 44px;
-            border-radius: 12px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -215,7 +230,7 @@
             font-size: 1rem;
         }
 
-        /* Floating Action Button (FAB) - Bottom Left */
+        /* Floating Action Button (FAB) */
         .fab-add {
             position: fixed;
             bottom: 24px;
@@ -235,11 +250,8 @@
             z-index: 10;
         }
 
-        /* Forms & Selections */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
+        /* Form Fields */
+        .form-group { margin-bottom: 20px; }
         .form-label {
             font-size: 0.85rem;
             font-weight: 600;
@@ -259,15 +271,12 @@
             outline: none;
         }
 
-        .form-input:focus {
-            border-color: var(--primary-color);
-        }
+        .form-input:focus { border-color: var(--primary-color); }
 
-        /* Icon Selection Grids */
         .section-title {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 700;
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 6px;
             display: inline-block;
             margin-bottom: 10px;
@@ -277,43 +286,36 @@
         .title-wants { background: var(--wants-bg); color: var(--wants-color); }
         .title-savings { background: var(--savings-bg); color: var(--savings-color); }
 
-        .grid-options {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+        /* Round Icon Grids (No Text) */
+        .grid-options-round {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-bottom: 16px;
         }
 
-        .grid-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px 4px;
+        .grid-btn-round {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             border: 2px solid var(--border-color);
-            border-radius: 12px;
             background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            font-size: 1.2rem;
             transition: all 0.2s;
         }
 
-        .grid-btn i {
-            font-size: 1.3rem;
-            margin-bottom: 6px;
-        }
-
-        .grid-btn span {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-align: center;
-            word-break: break-word;
-        }
-
-        .grid-btn.selected {
+        .grid-btn-round.selected {
             border-color: var(--primary-color);
             background-color: #f0f0ff;
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
         }
 
-        /* Modal / Add View */
+        /* Modal / Full View windows */
         .modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -324,9 +326,7 @@
             overflow-y: auto;
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
         .modal-header {
             padding: 16px;
@@ -349,7 +349,6 @@
             margin-top: 10px;
         }
 
-        /* Charts styling */
         .chart-container {
             background: white;
             border: 1px solid var(--border-color);
@@ -370,14 +369,14 @@
 <body>
 
 <div id="app">
-    <!-- Header -->
+    <!-- Header Bar -->
     <header>
         <button class="icon-btn" id="btn-menu"><i class="fa-solid fa-bars"></i></button>
         <h1 id="page-title">Monthly Expenses</h1>
         <button class="icon-btn" id="btn-refresh" title="Refresh CSV Data"><i class="fa-solid fa-rotate-right"></i></button>
     </header>
 
-    <!-- Navigation Drawer -->
+    <!-- Sidebar Overlay & Navigation -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -391,14 +390,30 @@
         </ul>
     </aside>
 
-    <!-- Main View Container -->
+    <!-- Main Container -->
     <main>
         <!-- Page 1: Monthly Expenses -->
         <div id="page-monthly" class="page active">
+            <!-- Total Expenses per Category Grid -->
+            <div class="summary-category-grid">
+                <div class="category-card needs">
+                    <span class="title">Needs</span>
+                    <span class="val" id="total-needs">₹0.00</span>
+                </div>
+                <div class="category-card wants">
+                    <span class="title">Wants</span>
+                    <span class="val" id="total-wants">₹0.00</span>
+                </div>
+                <div class="category-card savings">
+                    <span class="title">Savings</span>
+                    <span class="val" id="total-savings">₹0.00</span>
+                </div>
+            </div>
+
             <div id="monthly-expense-list"></div>
         </div>
 
-        <!-- Page 2: Total Expenses Across All Months -->
+        <!-- Page 2: All Months Total -->
         <div id="page-all-time" class="page">
             <div class="summary-card">
                 <div style="font-size:0.85rem; opacity:0.9;">Total All-Time Expenses</div>
@@ -420,10 +435,41 @@
         </div>
     </main>
 
-    <!-- Bottom Left Floating Add Button -->
+    <!-- Floating Add Button -->
     <button class="fab-add" id="btn-open-add"><i class="fa-solid fa-plus"></i></button>
 
-    <!-- Add/Edit Expense Modal View (Feature 5: Amount, Date, Needs/Wants/Savings Grid, Payment Source Grid, NO TITLE) -->
+    <!-- Read-Only Full Window View Modal (Prevents Accidental Edits) -->
+    <div class="modal" id="modal-view">
+        <div class="modal-header">
+            <h2 style="font-size:1.1rem;">Expense Details</h2>
+            <div style="display:flex; gap:8px;">
+                <button class="icon-btn" id="btn-edit-from-view" title="Edit Expense"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button class="icon-btn" id="btn-close-view"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+        <div style="padding: 32px 16px; text-align: center;">
+            <div id="view-icon-badge" class="icon-badge" style="width: 72px; height: 72px; font-size: 2rem; margin: 0 auto 16px;"></div>
+            <div id="view-amount" style="font-size: 2.5rem; font-weight: 800; margin-bottom: 4px;">₹0.00</div>
+            <div id="view-subcategory" style="font-size: 1.1rem; font-weight: 600; color: var(--text-muted); margin-bottom: 32px;"></div>
+
+            <div style="background: var(--bg-color); border-radius: 12px; padding: 16px; text-align: left; display: flex; flex-direction: column; gap: 14px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);">Category</span>
+                    <span id="view-type" style="font-weight: 600;"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);">Payment Source</span>
+                    <span id="view-source" style="font-weight: 600;"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);">Date</span>
+                    <span id="view-date" style="font-weight: 600;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Expense Form Modal -->
     <div class="modal" id="modal-expense">
         <div class="modal-header">
             <h2 id="modal-title" style="font-size:1.1rem;">Add Expense</h2>
@@ -444,24 +490,24 @@
                 <input type="date" class="form-input" id="expense-date" required />
             </div>
 
-            <!-- Categories Selection Grid (Needs, Wants, Savings) -->
+            <!-- Round Icon Selection Grids (No Text Labels) -->
             <div class="form-group">
                 <label class="form-label">Category & Subcategory</label>
 
                 <div class="section-title title-needs">NEEDS</div>
-                <div class="grid-options" id="grid-needs"></div>
+                <div class="grid-options-round" id="grid-needs"></div>
 
                 <div class="section-title title-wants">WANTS</div>
-                <div class="grid-options" id="grid-wants"></div>
+                <div class="grid-options-round" id="grid-wants"></div>
 
                 <div class="section-title title-savings">SAVINGS</div>
-                <div class="grid-options" id="grid-savings"></div>
+                <div class="grid-options-round" id="grid-savings"></div>
             </div>
 
             <!-- Payment Source Grid -->
             <div class="form-group">
                 <label class="form-label">Payment Source</label>
-                <div class="grid-options" id="grid-sources"></div>
+                <div class="grid-options-round" id="grid-sources"></div>
             </div>
 
             <button type="submit" class="save-btn" id="btn-save">Save Expense</button>
@@ -471,26 +517,20 @@
 </div>
 
 <script>
-    /**
-     * INITIAL CONFIGURATIONS & JSON MAPPINGS
-     */
-
-        // Payment sources initialized from configuration
+    // Payment sources initialized from configuration[cite: 1]
     const PAYMENT_SOURCES_CONFIG = [
-            "Cash",
-            "SBI CC",
-            "ICICI CC",
-            "AXIS CC"
-        ];
+        "Cash",
+        "SBI CC",
+        "ICICI CC",
+        "AXIS CC"
+    ];
 
-    // Category & Subcategory definitions
     const CATEGORIES_CONFIG = {
         Needs: ["Groceries", "Rent", "Utilities", "Transport", "Health", "Fuel", "Bills"],
         Wants: ["Dining", "Entertainment", "Shopping", "Travel", "Hobbies", "Subscriptions"],
         Savings: ["Emergency", "Investments", "Stocks", "Mutual Funds", "Gold"]
     };
 
-    // Pre-mapped Icon Dictionary (Hundreds of mapped subcategories & sources with distinct color styles)
     const ICON_MAP = {
         // Needs
         "Groceries": { icon: "fa-basket-shopping", bg: "#d1fae5", color: "#059669" },
@@ -524,9 +564,6 @@
         "Default": { icon: "fa-receipt", bg: "#f3f4f6", color: "#4b5563" }
     };
 
-    /**
-     * FEATURE 8: STUB ENDPOINTS (CSV API)
-     */
     const DEFAULT_CSV =
         `id,date,amount,type,subcategory,source
 1,2026-09-25,450.00,Needs,Groceries,SBI CC
@@ -536,7 +573,6 @@
 5,2026-08-10,2500.00,Wants,Shopping,SBI CC`;
 
     const ApiStub = {
-        // Endpoint: GET /api/expenses (Returns CSV string)
         async fetchExpensesCSV() {
             const stored = localStorage.getItem('expenses_csv');
             if (!stored) {
@@ -545,22 +581,16 @@
             }
             return stored;
         },
-
-        // Endpoint: POST /api/expenses (Receives CSV string)
         async saveExpensesCSV(csvString) {
             localStorage.setItem('expenses_csv', csvString.trim());
             return { status: 200, message: "CSV updated successfully" };
         }
     };
 
-    /**
-     * CSV UTILITIES
-     */
     function parseCSV(csvText) {
         const lines = csvText.trim().split('\n');
         if (lines.length <= 1) return [];
         const headers = lines[0].split(',').map(h => h.trim());
-
         return lines.slice(1).map(line => {
             const values = line.split(',').map(v => v.trim());
             let obj = {};
@@ -578,38 +608,34 @@
         return [headers.join(','), ...rows].join('\n');
     }
 
-    /**
-     * APP STATE & DOM REFS
-     */
     let state = {
         expenses: [],
-        selectedCategory: null,
-        selectedSubcategory: null,
         selectedType: null,
+        selectedSubcategory: null,
         selectedSource: null,
-        editingId: null
+        editingId: null,
+        activeViewItem: null
     };
 
     let categoryChart = null;
     let sourceChart = null;
 
-    // DOM Elements
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     const btnMenu = document.getElementById('btn-menu');
     const btnRefresh = document.getElementById('btn-refresh');
     const modalExpense = document.getElementById('modal-expense');
+    const modalView = document.getElementById('modal-view');
     const btnOpenAdd = document.getElementById('btn-open-add');
     const btnCloseModal = document.getElementById('btn-close-modal');
+    const btnCloseView = document.getElementById('btn-close-view');
+    const btnEditFromView = document.getElementById('btn-edit-from-view');
     const formExpense = document.getElementById('form-expense');
     const btnDelete = document.getElementById('btn-delete');
 
-    /**
-     * INITIALIZATION
-     */
     async function init() {
         setupEventListeners();
-        buildFormGrids();
+        buildFormRoundGrids();
         await loadDataFromStub();
     }
 
@@ -625,56 +651,51 @@
         renderCurrentPage();
     }
 
-    /**
-     * RENDER GRID OPTIONS FOR ADD/EDIT VIEW
-     */
-    function buildFormGrids() {
-        // Populate Needs, Wants, Savings
+    // Round Icons with No Text Labels inside the Add/Edit form
+    function buildFormRoundGrids() {
         Object.keys(CATEGORIES_CONFIG).forEach(type => {
             const container = document.getElementById(`grid-${type.toLowerCase()}`);
             container.innerHTML = '';
             CATEGORIES_CONFIG[type].forEach(sub => {
                 const meta = ICON_MAP[sub] || ICON_MAP.Default;
                 const btn = document.createElement('div');
-                btn.className = 'grid-btn';
+                btn.className = 'grid-btn-round';
                 btn.dataset.type = type;
                 btn.dataset.sub = sub;
-                btn.innerHTML = `<i class="fa-solid ${meta.icon}" style="color:${meta.color}"></i><span>${sub}</span>`;
+                btn.title = sub;
+                btn.innerHTML = `<i class="fa-solid ${meta.icon}" style="color:${meta.color}"></i>`;
                 btn.onclick = () => selectCategoryOption(btn, type, sub);
                 container.appendChild(btn);
             });
         });
 
-        // Populate Sources Grid[cite: 1]
         const sourceContainer = document.getElementById('grid-sources');
         sourceContainer.innerHTML = '';
         PAYMENT_SOURCES_CONFIG.forEach(src => {
             const meta = ICON_MAP[src] || ICON_MAP.Default;
             const btn = document.createElement('div');
-            btn.className = 'grid-btn';
+            btn.className = 'grid-btn-round';
             btn.dataset.source = src;
-            btn.innerHTML = `<i class="fa-solid ${meta.icon}" style="color:${meta.color}"></i><span>${src}</span>`;
+            btn.title = src;
+            btn.innerHTML = `<i class="fa-solid ${meta.icon}" style="color:${meta.color}"></i>`;
             btn.onclick = () => selectSourceOption(btn, src);
             sourceContainer.appendChild(btn);
         });
     }
 
     function selectCategoryOption(element, type, subcategory) {
-        document.querySelectorAll('#modal-expense .grid-btn[data-sub]').forEach(b => b.classList.remove('selected'));
+        document.querySelectorAll('#modal-expense .grid-btn-round[data-sub]').forEach(b => b.classList.remove('selected'));
         element.classList.add('selected');
         state.selectedType = type;
         state.selectedSubcategory = subcategory;
     }
 
     function selectSourceOption(element, source) {
-        document.querySelectorAll('#grid-sources .grid-btn').forEach(b => b.classList.remove('selected'));
+        document.querySelectorAll('#grid-sources .grid-btn-round').forEach(b => b.classList.remove('selected'));
         element.classList.add('selected');
         state.selectedSource = source;
     }
 
-    /**
-     * RENDER PAGES
-     */
     function renderCurrentPage() {
         const activePage = document.querySelector('.page.active').id;
         if (activePage === 'page-monthly') renderMonthlyPage();
@@ -682,7 +703,7 @@
         if (activePage === 'page-breakdown') renderBreakdownPage();
     }
 
-    // Feature 6: Main Page showing expenses for current month
+    // Render Monthly Page + Category Summaries at top
     function renderMonthlyPage() {
         const listEl = document.getElementById('monthly-expense-list');
         listEl.innerHTML = '';
@@ -691,10 +712,24 @@
         const currentYear = now.getFullYear();
         const currentMonth = now.getMonth();
 
+        let needsSum = 0;
+        let wantsSum = 0;
+        let savingsSum = 0;
+
         const monthlyExpenses = state.expenses.filter(item => {
             const d = new Date(item.date);
             return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
         }).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        monthlyExpenses.forEach(item => {
+            if (item.type === 'Needs') needsSum += item.amount;
+            if (item.type === 'Wants') wantsSum += item.amount;
+            if (item.type === 'Savings') savingsSum += item.amount;
+        });
+
+        document.getElementById('total-needs').textContent = `₹${needsSum.toFixed(2)}`;
+        document.getElementById('total-wants').textContent = `₹${wantsSum.toFixed(2)}`;
+        document.getElementById('total-savings').textContent = `₹${savingsSum.toFixed(2)}`;
 
         if (monthlyExpenses.length === 0) {
             listEl.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);">No expenses recorded for this month.</div>`;
@@ -706,6 +741,55 @@
         });
     }
 
+    function createExpenseCard(item) {
+        const meta = ICON_MAP[item.subcategory] || ICON_MAP.Default;
+        const card = document.createElement('div');
+        card.className = 'expense-item';
+
+        // Open Read-Only View modal on click
+        card.onclick = () => openViewModal(item);
+
+        card.innerHTML = `
+      <div class="expense-left">
+        <div class="icon-badge" style="background:${meta.bg}; color:${meta.color};">
+          <i class="fa-solid ${meta.icon}"></i>
+        </div>
+        <div class="expense-details">
+          <div class="title">${item.subcategory}</div>
+          <div class="sub">
+            <span>${item.date}</span> •
+            <span style="font-weight:600;">${item.source}</span>
+          </div>
+        </div>
+      </div>
+      <div class="expense-amount">₹${item.amount.toFixed(2)}</div>
+    `;
+        return card;
+    }
+
+    // Open Full Window Read-Only View Modal
+    function openViewModal(item) {
+        state.activeViewItem = item;
+        const meta = ICON_MAP[item.subcategory] || ICON_MAP.Default;
+
+        const badge = document.getElementById('view-icon-badge');
+        badge.style.background = meta.bg;
+        badge.style.color = meta.color;
+        badge.innerHTML = `<i class="fa-solid ${meta.icon}"></i>`;
+
+        document.getElementById('view-amount').textContent = `₹${item.amount.toFixed(2)}`;
+        document.getElementById('view-subcategory').textContent = item.subcategory;
+        document.getElementById('view-type').textContent = item.type;
+        document.getElementById('view-source').textContent = item.source;
+        document.getElementById('view-date').textContent = item.date;
+
+        modalView.classList.add('active');
+    }
+
+    function closeViewModal() {
+        modalView.classList.remove('active');
+    }
+
     function renderAllTimePage() {
         const totalEl = document.getElementById('all-time-total');
         const listEl = document.getElementById('all-time-monthly-list');
@@ -714,10 +798,9 @@
         const grandTotal = state.expenses.reduce((sum, item) => sum + item.amount, 0);
         totalEl.textContent = `₹${grandTotal.toFixed(2)}`;
 
-        // Group by month
         const grouped = {};
         state.expenses.forEach(item => {
-            const monthKey = item.date.substring(0, 7); // YYYY-MM
+            const monthKey = item.date.substring(0, 7);
             grouped[monthKey] = (grouped[monthKey] || 0) + item.amount;
         });
 
@@ -740,7 +823,6 @@
         });
     }
 
-    // Feature 7: Pie Charts (Expenses per Source & per Category)
     function renderBreakdownPage() {
         const categoryTotals = { Needs: 0, Wants: 0, Savings: 0 };
         const sourceTotals = {};
@@ -750,7 +832,6 @@
             sourceTotals[item.source] = (sourceTotals[item.source] || 0) + item.amount;
         });
 
-        // Render Category Chart
         if (categoryChart) categoryChart.destroy();
         const ctxCat = document.getElementById('chart-category').getContext('2d');
         categoryChart = new Chart(ctxCat, {
@@ -765,17 +846,14 @@
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
 
-        // Render Source Chart
         if (sourceChart) sourceChart.destroy();
         const ctxSrc = document.getElementById('chart-source').getContext('2d');
-        const sourceLabels = Object.keys(sourceTotals);
-        const sourceData = Object.values(sourceTotals);
         sourceChart = new Chart(ctxSrc, {
             type: 'pie',
             data: {
-                labels: sourceLabels,
+                labels: Object.keys(sourceTotals),
                 datasets: [{
-                    data: sourceData,
+                    data: Object.values(sourceTotals),
                     backgroundColor: ['#6366f1', '#ec4899', '#f97316', '#14b8a6', '#8b5cf6']
                 }]
             },
@@ -783,35 +861,6 @@
         });
     }
 
-    function createExpenseCard(item) {
-        const meta = ICON_MAP[item.subcategory] || ICON_MAP.Default;
-        const card = document.createElement('div');
-        card.className = 'expense-item';
-
-        // Feature 9: Click to Edit Expense
-        card.onclick = () => openEditModal(item);
-
-        card.innerHTML = `
-      <div class="expense-left">
-        <div class="icon-badge" style="background:${meta.bg}; color:${meta.color};">
-          <i class="fa-solid ${meta.icon}"></i>
-        </div>
-        <div class="expense-details">
-          <div class="title">${item.subcategory}</div>
-          <div class="sub">
-            <span>${item.date}</span> •
-            <span style="font-weight:600;">${item.source}</span>
-          </div>
-        </div>
-      </div>
-      <div class="expense-amount">₹${item.amount.toFixed(2)}</div>
-    `;
-        return card;
-    }
-
-    /**
-     * MODAL & FORM HANDLERS
-     */
     function openAddModal() {
         state.editingId = null;
         document.getElementById('modal-title').textContent = 'Add Expense';
@@ -820,8 +869,7 @@
         document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
         btnDelete.style.display = 'none';
 
-        // Clear selections
-        document.querySelectorAll('.grid-btn').forEach(b => b.classList.remove('selected'));
+        document.querySelectorAll('.grid-btn-round').forEach(b => b.classList.remove('selected'));
         state.selectedType = null;
         state.selectedSubcategory = null;
         state.selectedSource = null;
@@ -837,15 +885,13 @@
         document.getElementById('expense-date').value = item.date;
         btnDelete.style.display = 'block';
 
-        // Highlight Category
-        document.querySelectorAll('#modal-expense .grid-btn[data-sub]').forEach(b => {
+        document.querySelectorAll('#modal-expense .grid-btn-round[data-sub]').forEach(b => {
             b.classList.toggle('selected', b.dataset.sub === item.subcategory);
         });
         state.selectedType = item.type;
         state.selectedSubcategory = item.subcategory;
 
-        // Highlight Source
-        document.querySelectorAll('#grid-sources .grid-btn').forEach(b => {
+        document.querySelectorAll('#grid-sources .grid-btn-round').forEach(b => {
             b.classList.toggle('selected', b.dataset.source === item.source);
         });
         state.selectedSource = item.source;
@@ -857,11 +903,7 @@
         modalExpense.classList.remove('active');
     }
 
-    /**
-     * EVENT LISTENERS
-     */
     function setupEventListeners() {
-        // Menu Drawer
         btnMenu.onclick = () => {
             sidebar.classList.add('open');
             sidebarOverlay.classList.add('active');
@@ -873,7 +915,6 @@
             sidebarOverlay.classList.remove('active');
         }
 
-        // Sidebar Nav Links
         document.querySelectorAll('.sidebar-menu li').forEach(li => {
             li.onclick = () => {
                 document.querySelectorAll('.sidebar-menu li').forEach(item => item.classList.remove('active'));
@@ -883,38 +924,39 @@
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                 document.getElementById(targetPage).classList.add('active');
 
-                // Update title
                 document.getElementById('page-title').textContent = li.textContent.trim();
-
                 closeSidebar();
                 renderCurrentPage();
             };
         });
 
-        // Feature 6: Manual Refresh Button
         btnRefresh.onclick = async () => {
             btnRefresh.querySelector('i').classList.add('fa-spin');
             await loadDataFromStub();
             setTimeout(() => btnRefresh.querySelector('i').classList.remove('fa-spin'), 400);
         };
 
-        // FAB Button & Modal Close
         btnOpenAdd.onclick = openAddModal;
         btnCloseModal.onclick = closeModal;
+        btnCloseView.onclick = closeViewModal;
 
-        // Save Expense
+        btnEditFromView.onclick = () => {
+            const itemToEdit = state.activeViewItem;
+            closeViewModal();
+            if (itemToEdit) openEditModal(itemToEdit);
+        };
+
         formExpense.onsubmit = async (e) => {
             e.preventDefault();
             const amount = parseFloat(document.getElementById('expense-amount').value);
             const date = document.getElementById('expense-date').value;
 
             if (!state.selectedSubcategory || !state.selectedSource) {
-                alert("Please select a Category and a Payment Source.");
+                alert("Please select a Category icon and a Payment Source icon.");
                 return;
             }
 
             if (state.editingId) {
-                // Edit existing
                 const index = state.expenses.findIndex(x => x.id == state.editingId);
                 if (index !== -1) {
                     state.expenses[index] = {
@@ -927,7 +969,6 @@
                     };
                 }
             } else {
-                // Add new
                 const newId = Date.now().toString();
                 state.expenses.push({
                     id: newId,
@@ -943,7 +984,6 @@
             closeModal();
         };
 
-        // Delete Expense
         btnDelete.onclick = async () => {
             if (state.editingId && confirm("Delete this expense?")) {
                 state.expenses = state.expenses.filter(x => x.id != state.editingId);
@@ -953,7 +993,6 @@
         };
     }
 
-    // Start Application
     window.onload = init;
 </script>
 </body>
