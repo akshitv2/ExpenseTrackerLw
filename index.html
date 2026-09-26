@@ -209,6 +209,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         .expense-details .title {
@@ -315,6 +316,29 @@
             box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
         }
 
+        /* Icon Guide Layout */
+        .icon-guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .icon-guide-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-guide-card .label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
         /* Modal / Full View windows */
         .modal {
             position: fixed;
@@ -387,6 +411,7 @@
             <li data-page="page-monthly" class="active"><i class="fa-solid fa-calendar-days"></i> Monthly Expenses</li>
             <li data-page="page-all-time"><i class="fa-solid fa-vault"></i> All Months Total</li>
             <li data-page="page-breakdown"><i class="fa-solid fa-chart-pie"></i> Expense Breakdown</li>
+            <li data-page="page-icon-guide"><i class="fa-solid fa-icons"></i> Icon Guide</li>
         </ul>
     </aside>
 
@@ -394,7 +419,6 @@
     <main>
         <!-- Page 1: Monthly Expenses -->
         <div id="page-monthly" class="page active">
-            <!-- Total Expenses per Category Grid -->
             <div class="summary-category-grid">
                 <div class="category-card needs">
                     <span class="title">Needs</span>
@@ -433,12 +457,23 @@
                 <canvas id="chart-source"></canvas>
             </div>
         </div>
+
+        <!-- Page 4: Icon Guide -->
+        <div id="page-icon-guide" class="page">
+            <h3 style="font-size:0.85rem; margin-bottom:12px; text-transform:uppercase; color:var(--text-muted);">In Use</h3>
+            <div id="used-icons-container" class="icon-guide-grid"></div>
+
+            <hr style="border:none; border-top:1px dashed var(--border-color); margin:20px 0;" />
+
+            <h3 style="font-size:0.85rem; margin-bottom:12px; text-transform:uppercase; color:var(--text-muted);">Available Mappings</h3>
+            <div id="unused-icons-container" class="icon-guide-grid"></div>
+        </div>
     </main>
 
     <!-- Floating Add Button -->
     <button class="fab-add" id="btn-open-add"><i class="fa-solid fa-plus"></i></button>
 
-    <!-- Read-Only Full Window View Modal (Prevents Accidental Edits) -->
+    <!-- Read-Only Full Window View Modal -->
     <div class="modal" id="modal-view">
         <div class="modal-header">
             <h2 style="font-size:1.1rem;">Expense Details</h2>
@@ -490,7 +525,7 @@
                 <input type="date" class="form-input" id="expense-date" required />
             </div>
 
-            <!-- Round Icon Selection Grids (No Text Labels) -->
+            <!-- Round Icon Selection Grids -->
             <div class="form-group">
                 <label class="form-label">Category & Subcategory</label>
 
@@ -517,7 +552,7 @@
 </div>
 
 <script>
-    // Payment sources initialized from configuration[cite: 1]
+    // Initialized payment sources[cite: 1]
     const PAYMENT_SOURCES_CONFIG = [
         "Cash",
         "SBI CC",
@@ -525,38 +560,51 @@
         "AXIS CC"
     ];
 
+    // Initialized categories initialized strictly from expenses.json[cite: 2]
     const CATEGORIES_CONFIG = {
-        Needs: ["Groceries", "Rent", "Utilities", "Transport", "Health", "Fuel", "Bills"],
-        Wants: ["Dining", "Entertainment", "Shopping", "Travel", "Hobbies", "Subscriptions"],
-        Savings: ["Emergency", "Investments", "Stocks", "Mutual Funds", "Gold"]
+        Needs: [
+            "Rent",
+            "Groceries",
+            "Bills"
+        ],
+        Wants: [
+            "Clothing",
+            "Eating out",
+            "Travel",
+            "Subscriptions",
+            "Electronics",
+            "Shopping"
+        ],
+        Savings: [
+            "FD",
+            "Mutual/Index Fund",
+            "Bank",
+            "Pension"
+        ]
     };
 
+    // Icon mappings corresponding to expenses.json subcategories and sources[cite: 1, 2]
     const ICON_MAP = {
-        // Needs
-        "Groceries": { icon: "fa-basket-shopping", bg: "#d1fae5", color: "#059669" },
+        // Needs[cite: 2]
         "Rent": { icon: "fa-house", bg: "#d1fae5", color: "#059669" },
-        "Utilities": { icon: "fa-bolt", bg: "#d1fae5", color: "#059669" },
-        "Transport": { icon: "fa-bus", bg: "#d1fae5", color: "#059669" },
-        "Health": { icon: "fa-heart-pulse", bg: "#d1fae5", color: "#059669" },
-        "Fuel": { icon: "fa-gas-pump", bg: "#d1fae5", color: "#059669" },
+        "Groceries": { icon: "fa-basket-shopping", bg: "#d1fae5", color: "#059669" },
         "Bills": { icon: "fa-file-invoice-dollar", bg: "#d1fae5", color: "#059669" },
 
-        // Wants
-        "Dining": { icon: "fa-utensils", bg: "#fef3c7", color: "#d97706" },
-        "Entertainment": { icon: "fa-film", bg: "#fef3c7", color: "#d97706" },
-        "Shopping": { icon: "fa-bag-shopping", bg: "#fef3c7", color: "#d97706" },
+        // Wants[cite: 2]
+        "Clothing": { icon: "fa-shirt", bg: "#fef3c7", color: "#d97706" },
+        "Eating out": { icon: "fa-utensils", bg: "#fef3c7", color: "#d97706" },
         "Travel": { icon: "fa-plane", bg: "#fef3c7", color: "#d97706" },
-        "Hobbies": { icon: "fa-gamepad", bg: "#fef3c7", color: "#d97706" },
         "Subscriptions": { icon: "fa-tv", bg: "#fef3c7", color: "#d97706" },
+        "Electronics": { icon: "fa-laptop", bg: "#fef3c7", color: "#d97706" },
+        "Shopping": { icon: "fa-bag-shopping", bg: "#fef3c7", color: "#d97706" },
 
-        // Savings
-        "Emergency": { icon: "fa-piggy-bank", bg: "#dbeafe", color: "#2563eb" },
-        "Investments": { icon: "fa-chart-line", bg: "#dbeafe", color: "#2563eb" },
-        "Stocks": { icon: "fa-arrow-trend-up", bg: "#dbeafe", color: "#2563eb" },
-        "Mutual Funds": { icon: "fa-vault", bg: "#dbeafe", color: "#2563eb" },
-        "Gold": { icon: "fa-coins", bg: "#dbeafe", color: "#2563eb" },
+        // Savings[cite: 2]
+        "FD": { icon: "fa-landmark", bg: "#dbeafe", color: "#2563eb" },
+        "Mutual/Index Fund": { icon: "fa-chart-line", bg: "#dbeafe", color: "#2563eb" },
+        "Bank": { icon: "fa-piggy-bank", bg: "#dbeafe", color: "#2563eb" },
+        "Pension": { icon: "fa-vault", bg: "#dbeafe", color: "#2563eb" },
 
-        // Payment Sources
+        // Payment Sources[cite: 1]
         "Cash": { icon: "fa-money-bill-wave", bg: "#e0e7ff", color: "#4f46e5" },
         "SBI CC": { icon: "fa-credit-card", bg: "#fce7f3", color: "#db2777" },
         "ICICI CC": { icon: "fa-credit-card", bg: "#ffedd5", color: "#ea580c" },
@@ -567,9 +615,9 @@
     const DEFAULT_CSV =
         `id,date,amount,type,subcategory,source
 1,2026-09-25,450.00,Needs,Groceries,SBI CC
-2,2026-09-24,1200.00,Wants,Dining,ICICI CC
-3,2026-09-20,5000.00,Savings,Mutual Funds,AXIS CC
-4,2026-09-15,350.00,Needs,Fuel,Cash
+2,2026-09-24,1200.00,Wants,Eating out,ICICI CC
+3,2026-09-20,5000.00,Savings,Mutual/Index Fund,AXIS CC
+4,2026-09-15,350.00,Needs,Bills,Cash
 5,2026-08-10,2500.00,Wants,Shopping,SBI CC`;
 
     const ApiStub = {
@@ -651,7 +699,6 @@
         renderCurrentPage();
     }
 
-    // Round Icons with No Text Labels inside the Add/Edit form
     function buildFormRoundGrids() {
         Object.keys(CATEGORIES_CONFIG).forEach(type => {
             const container = document.getElementById(`grid-${type.toLowerCase()}`);
@@ -701,9 +748,9 @@
         if (activePage === 'page-monthly') renderMonthlyPage();
         if (activePage === 'page-all-time') renderAllTimePage();
         if (activePage === 'page-breakdown') renderBreakdownPage();
+        if (activePage === 'page-icon-guide') renderIconGuidePage();
     }
 
-    // Render Monthly Page + Category Summaries at top
     function renderMonthlyPage() {
         const listEl = document.getElementById('monthly-expense-list');
         listEl.innerHTML = '';
@@ -745,8 +792,6 @@
         const meta = ICON_MAP[item.subcategory] || ICON_MAP.Default;
         const card = document.createElement('div');
         card.className = 'expense-item';
-
-        // Open Read-Only View modal on click
         card.onclick = () => openViewModal(item);
 
         card.innerHTML = `
@@ -767,7 +812,6 @@
         return card;
     }
 
-    // Open Full Window Read-Only View Modal
     function openViewModal(item) {
         state.activeViewItem = item;
         const meta = ICON_MAP[item.subcategory] || ICON_MAP.Default;
@@ -859,6 +903,42 @@
             },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
+    }
+
+    function renderIconGuidePage() {
+        const usedContainer = document.getElementById('used-icons-container');
+        const unusedContainer = document.getElementById('unused-icons-container');
+        usedContainer.innerHTML = '';
+        unusedContainer.innerHTML = '';
+
+        const usedKeys = new Set();
+        state.expenses.forEach(item => {
+            if (item.subcategory) usedKeys.add(item.subcategory);
+            if (item.source) usedKeys.add(item.source);
+        });
+
+        Object.keys(ICON_MAP).forEach(key => {
+            if (key === 'Default') return;
+            const meta = ICON_MAP[key];
+            const card = document.createElement('div');
+            card.className = 'icon-guide-card';
+            card.innerHTML = `
+        <div class="icon-badge" style="width:36px; height:36px; font-size:1rem; background:${meta.bg}; color:${meta.color}; border-radius:50%;">
+          <i class="fa-solid ${meta.icon}"></i>
+        </div>
+        <div class="label">${key}</div>
+      `;
+
+            if (usedKeys.has(key)) {
+                usedContainer.appendChild(card);
+            } else {
+                unusedContainer.appendChild(card);
+            }
+        });
+
+        if (usedContainer.children.length === 0) {
+            usedContainer.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem; grid-column:1/-1;">No mapped icons currently in use.</div>`;
+        }
     }
 
     function openAddModal() {
