@@ -373,6 +373,64 @@
             margin-top: 10px;
         }
 
+        .export-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .export-card .export-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .export-card .export-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .export-card .export-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .export-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .export-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .export-btn.secondary {
+            background: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .export-btn:active {
+            opacity: 0.9;
+        }
+
         .chart-container {
             background: white;
             border: 1px solid var(--border-color);
@@ -411,6 +469,7 @@
             <li data-page="page-monthly" class="active"><i class="fa-solid fa-calendar-days"></i> Monthly Expenses</li>
             <li data-page="page-all-time"><i class="fa-solid fa-vault"></i> All Months Total</li>
             <li data-page="page-breakdown"><i class="fa-solid fa-chart-pie"></i> Expense Breakdown</li>
+            <li data-page="page-export"><i class="fa-solid fa-file-csv"></i> Export Data</li>
             <li data-page="page-icon-guide"><i class="fa-solid fa-icons"></i> Icon Guide</li>
         </ul>
     </aside>
@@ -458,7 +517,45 @@
             </div>
         </div>
 
-        <!-- Page 4: Icon Guide -->
+        <!-- Page 4: Export Data -->
+        <div id="page-export" class="page">
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Copy CSV data to clipboard or download it as a file.</p>
+
+            <div class="export-card">
+                <div class="export-info">
+                    <div class="export-title">This Month</div>
+                    <div class="export-sub" id="export-this-month-count">0 entries</div>
+                </div>
+                <div class="export-actions">
+                    <button class="export-btn secondary" id="btn-copy-this-month"><i class="fa-solid fa-copy"></i> Copy</button>
+                    <button class="export-btn" id="btn-export-this-month"><i class="fa-solid fa-download"></i> Download</button>
+                </div>
+            </div>
+
+            <div class="export-card">
+                <div class="export-info">
+                    <div class="export-title">Last Month</div>
+                    <div class="export-sub" id="export-last-month-count">0 entries</div>
+                </div>
+                <div class="export-actions">
+                    <button class="export-btn secondary" id="btn-copy-last-month"><i class="fa-solid fa-copy"></i> Copy</button>
+                    <button class="export-btn" id="btn-export-last-month"><i class="fa-solid fa-download"></i> Download</button>
+                </div>
+            </div>
+
+            <div class="export-card">
+                <div class="export-info">
+                    <div class="export-title">Overall</div>
+                    <div class="export-sub" id="export-overall-count">0 entries</div>
+                </div>
+                <div class="export-actions">
+                    <button class="export-btn secondary" id="btn-copy-overall"><i class="fa-solid fa-copy"></i> Copy</button>
+                    <button class="export-btn" id="btn-export-overall"><i class="fa-solid fa-download"></i> Download</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 5: Icon Guide -->
         <div id="page-icon-guide" class="page">
             <h3 style="font-size:0.85rem; margin-bottom:12px; text-transform:uppercase; color:var(--text-muted);">Defined in Configs (JSON)</h3>
             <div id="used-icons-container" class="icon-guide-grid"></div>
@@ -555,8 +652,18 @@
     let PAYMENT_SOURCES_CONFIG = [];
     let CATEGORIES_CONFIG = {};
 
+    function generateUUID() {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
     const ICON_MAP = {
-        // Current / Standard Mappings[cite: 1]
         "Rent": { icon: "fa-house", bg: "#d1fae5", color: "#059669" },
         "Groceries": { icon: "fa-basket-shopping", bg: "#d1fae5", color: "#059669" },
         "Bills": { icon: "fa-file-invoice-dollar", bg: "#d1fae5", color: "#059669" },
@@ -575,8 +682,6 @@
         "ICICI CC": { icon: "fa-credit-card", bg: "#ffedd5", color: "#ea580c" },
         "AXIS CC": { icon: "fa-credit-card", bg: "#ccfbf1", color: "#0d9488" },
         "Default": { icon: "fa-receipt", bg: "#f3f4f6", color: "#4b5563" },
-
-        // Additional Needs Mappings
         "Electricity": { icon: "fa-bolt", bg: "#d1fae5", color: "#059669" },
         "Water": { icon: "fa-droplet", bg: "#d1fae5", color: "#059669" },
         "Internet": { icon: "fa-wifi", bg: "#d1fae5", color: "#059669" },
@@ -587,8 +692,6 @@
         "Education/Tuition": { icon: "fa-graduation-cap", bg: "#d1fae5", color: "#059669" },
         "Maintenance": { icon: "fa-wrench", bg: "#d1fae5", color: "#059669" },
         "Childcare": { icon: "fa-baby", bg: "#d1fae5", color: "#059669" },
-
-        // Additional Wants Mappings
         "Coffee": { icon: "fa-mug-hot", bg: "#fef3c7", color: "#d97706" },
         "Movies/Cinema": { icon: "fa-film", bg: "#fef3c7", color: "#d97706" },
         "Gym/Fitness": { icon: "fa-dumbbell", bg: "#fef3c7", color: "#d97706" },
@@ -599,15 +702,11 @@
         "Pets": { icon: "fa-dog", bg: "#fef3c7", color: "#d97706" },
         "Parties/Bar": { icon: "fa-wine-glass", bg: "#fef3c7", color: "#d97706" },
         "Vacation": { icon: "fa-umbrella-beach", bg: "#fef3c7", color: "#d97706" },
-
-        // Additional Savings & Investments Mappings
         "Gold/SGB": { icon: "fa-coins", bg: "#dbeafe", color: "#2563eb" },
         "Stocks/Equity": { icon: "fa-arrow-trend-up", bg: "#dbeafe", color: "#2563eb" },
         "Crypto": { icon: "fa-bitcoin-sign", bg: "#dbeafe", color: "#2563eb" },
         "Emergency Fund": { icon: "fa-life-ring", bg: "#dbeafe", color: "#2563eb" },
         "Real Estate": { icon: "fa-building", bg: "#dbeafe", color: "#2563eb" },
-
-        // Additional Payment Sources Mappings
         "UPI": { icon: "fa-qrcode", bg: "#e0e7ff", color: "#4f46e5" },
         "HDFC CC": { icon: "fa-credit-card", bg: "#fce7f3", color: "#db2777" },
         "Amex CC": { icon: "fa-credit-card", bg: "#dcfce7", color: "#16a34a" },
@@ -615,13 +714,7 @@
         "Debit Card": { icon: "fa-id-card", bg: "#fef3c7", color: "#d97706" }
     };
 
-    const DEFAULT_CSV =
-        `id,date,amount,type,subcategory,source
-1,2026-09-25,450.00,Needs,Groceries,SBI CC
-2,2026-09-24,1200.00,Wants,Eating out,ICICI CC
-3,2026-09-20,5000.00,Savings,Mutual/Index Fund,AXIS CC
-4,2026-09-15,350.00,Needs,Bills,Cash
-5,2026-08-10,2500.00,Wants,Shopping,SBI CC`;
+    const DEFAULT_CSV =`id,date,amount,type,subcategory,source`;
 
     const ApiStub = {
         async fetchExpensesCSV() {
@@ -659,6 +752,57 @@
         return [headers.join(','), ...rows].join('\n');
     }
 
+    function downloadCSV(csvContent, filename) {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    async function copyCSVToClipboard(csvContent, buttonEl) {
+        try {
+            await navigator.clipboard.writeText(csvContent);
+            const originalHTML = buttonEl.innerHTML;
+            buttonEl.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
+            setTimeout(() => {
+                buttonEl.innerHTML = originalHTML;
+            }, 1500);
+        } catch (err) {
+            alert("Failed to copy to clipboard.");
+        }
+    }
+
+    function getFilteredExpenses(filterType) {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth();
+
+        if (filterType === 'this-month') {
+            return state.expenses.filter(item => {
+                const d = new Date(item.date);
+                return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
+            });
+        }
+
+        if (filterType === 'last-month') {
+            const lastMonthDate = new Date(currentYear, currentMonth - 1, 1);
+            const targetYear = lastMonthDate.getFullYear();
+            const targetMonth = lastMonthDate.getMonth();
+            return state.expenses.filter(item => {
+                const d = new Date(item.date);
+                return d.getFullYear() === targetYear && d.getMonth() === targetMonth;
+            });
+        }
+
+        return state.expenses;
+    }
+
     let state = {
         expenses: [],
         selectedType: null,
@@ -691,13 +835,8 @@
                 fetch('./sources.json')
             ]);
 
-            if (expensesRes.ok) {
-                CATEGORIES_CONFIG = await expensesRes.json();
-            }
-
-            if (sourcesRes.ok) {
-                PAYMENT_SOURCES_CONFIG = await sourcesRes.json();
-            }
+            if (expensesRes.ok) CATEGORIES_CONFIG = await expensesRes.json();
+            if (sourcesRes.ok) PAYMENT_SOURCES_CONFIG = await sourcesRes.json();
         } catch (error) {
             console.error("Failed to load JSON configurations:", error);
         }
@@ -772,6 +911,7 @@
         if (activePage === 'page-monthly') renderMonthlyPage();
         if (activePage === 'page-all-time') renderAllTimePage();
         if (activePage === 'page-breakdown') renderBreakdownPage();
+        if (activePage === 'page-export') renderExportPage();
         if (activePage === 'page-icon-guide') renderIconGuidePage();
     }
 
@@ -783,9 +923,7 @@
         const currentYear = now.getFullYear();
         const currentMonth = now.getMonth();
 
-        let needsSum = 0;
-        let wantsSum = 0;
-        let savingsSum = 0;
+        let needsSum = 0, wantsSum = 0, savingsSum = 0;
 
         const monthlyExpenses = state.expenses.filter(item => {
             const d = new Date(item.date);
@@ -793,9 +931,10 @@
         }).sort((a,b) => new Date(b.date) - new Date(a.date));
 
         monthlyExpenses.forEach(item => {
-            if (item.type === 'Needs') needsSum += item.amount;
-            if (item.type === 'Wants') wantsSum += item.amount;
-            if (item.type === 'Savings') savingsSum += item.amount;
+            const categoryType = (item.type || '').trim().toLowerCase();
+            if (categoryType === 'needs') needsSum += item.amount;
+            else if (categoryType === 'wants') wantsSum += item.amount;
+            else if (categoryType === 'savings') savingsSum += item.amount;
         });
 
         document.getElementById('total-needs').textContent = `₹${needsSum.toFixed(2)}`;
@@ -892,23 +1031,29 @@
     }
 
     function renderBreakdownPage() {
-        const categoryTotals = { Needs: 0, Wants: 0, Savings: 0 };
+        const categoryTotals = {};
         const sourceTotals = {};
 
         state.expenses.forEach(item => {
-            if (categoryTotals[item.type] !== undefined) categoryTotals[item.type] += item.amount;
-            sourceTotals[item.source] = (sourceTotals[item.source] || 0) + item.amount;
+            const catKey = item.subcategory || 'Uncategorized';
+            categoryTotals[catKey] = (categoryTotals[catKey] || 0) + item.amount;
+
+            const srcKey = item.source || 'Unknown';
+            sourceTotals[srcKey] = (sourceTotals[srcKey] || 0) + item.amount;
         });
+
+        const catColors = ['#10b981', '#f59e0b', '#3b82f6', '#6366f1', '#ec4899', '#f97316', '#14b8a6', '#8b5cf6', '#ef4444', '#06b6d4'];
+        const srcColors = ['#6366f1', '#ec4899', '#f97316', '#14b8a6', '#8b5cf6', '#10b981', '#f59e0b', '#3b82f6'];
 
         if (categoryChart) categoryChart.destroy();
         const ctxCat = document.getElementById('chart-category').getContext('2d');
         categoryChart = new Chart(ctxCat, {
             type: 'pie',
             data: {
-                labels: ['Needs', 'Wants', 'Savings'],
+                labels: Object.keys(categoryTotals),
                 datasets: [{
-                    data: [categoryTotals.Needs, categoryTotals.Wants, categoryTotals.Savings],
-                    backgroundColor: ['#10b981', '#f59e0b', '#3b82f6']
+                    data: Object.values(categoryTotals),
+                    backgroundColor: Object.keys(categoryTotals).map((_, idx) => catColors[idx % catColors.length])
                 }]
             },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
@@ -922,11 +1067,21 @@
                 labels: Object.keys(sourceTotals),
                 datasets: [{
                     data: Object.values(sourceTotals),
-                    backgroundColor: ['#6366f1', '#ec4899', '#f97316', '#14b8a6', '#8b5cf6']
+                    backgroundColor: Object.keys(sourceTotals).map((_, idx) => srcColors[idx % srcColors.length])
                 }]
             },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
+    }
+
+    function renderExportPage() {
+        const thisMonthItems = getFilteredExpenses('this-month');
+        const lastMonthItems = getFilteredExpenses('last-month');
+        const overallItems = getFilteredExpenses('overall');
+
+        document.getElementById('export-this-month-count').textContent = `${thisMonthItems.length} entries`;
+        document.getElementById('export-last-month-count').textContent = `${lastMonthItems.length} entries`;
+        document.getElementById('export-overall-count').textContent = `${overallItems.length} entries`;
     }
 
     function renderIconGuidePage() {
@@ -1015,6 +1170,23 @@
         modalExpense.classList.remove('active');
     }
 
+    function handleExport(type, action, buttonEl) {
+        const filtered = getFilteredExpenses(type);
+        if (filtered.length === 0) {
+            alert("No data available to export for the selected range.");
+            return;
+        }
+
+        const csvContent = convertToCSV(filtered);
+
+        if (action === 'download') {
+            const dateStr = new Date().toISOString().split('T')[0];
+            downloadCSV(csvContent, `expenses_${type}_${dateStr}.csv`);
+        } else if (action === 'copy') {
+            copyCSVToClipboard(csvContent, buttonEl);
+        }
+    }
+
     function setupEventListeners() {
         btnMenu.onclick = () => {
             sidebar.classList.add('open');
@@ -1058,6 +1230,15 @@
             if (itemToEdit) openEditModal(itemToEdit);
         };
 
+        document.getElementById('btn-export-this-month').onclick = (e) => handleExport('this-month', 'download', e.currentTarget);
+        document.getElementById('btn-copy-this-month').onclick = (e) => handleExport('this-month', 'copy', e.currentTarget);
+
+        document.getElementById('btn-export-last-month').onclick = (e) => handleExport('last-month', 'download', e.currentTarget);
+        document.getElementById('btn-copy-last-month').onclick = (e) => handleExport('last-month', 'copy', e.currentTarget);
+
+        document.getElementById('btn-export-overall').onclick = (e) => handleExport('overall', 'download', e.currentTarget);
+        document.getElementById('btn-copy-overall').onclick = (e) => handleExport('overall', 'copy', e.currentTarget);
+
         formExpense.onsubmit = async (e) => {
             e.preventDefault();
             const amount = parseFloat(document.getElementById('expense-amount').value);
@@ -1081,7 +1262,7 @@
                     };
                 }
             } else {
-                const newId = Date.now().toString();
+                const newId = generateUUID();
                 state.expenses.push({
                     id: newId,
                     date,
