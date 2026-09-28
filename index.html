@@ -37,6 +37,11 @@
             padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-tap-highlight-color: transparent;
+            /* Disable selection globally */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         body {
@@ -252,6 +257,19 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 12px;
+        }
+
+        .category-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 12px;
+            margin-bottom: 6px;
+        }
+
+        .category-section-title:first-child {
+            margin-top: 0;
         }
 
         /* Transaction List */
@@ -627,7 +645,7 @@
     <header class="header">
         <button class="header-btn" id="drawerToggleBtn"><i class="fa-solid fa-bars"></i></button>
         <div class="header-title" id="pageTitle">Monthly Expenses</div>
-        <button class="header-btn" id="refreshBtn"><i class="fa-solid fa-rotate-right"></i></button>
+        <div style="width: 40px;"></div>
     </header>
 
     <!-- Slide-Out Navigation Drawer -->
@@ -660,15 +678,15 @@
             <div class="cards-grid">
                 <div class="summary-card needs">
                     <span class="card-label">Needs</span>
-                    <span class="card-amount" id="sumNeeds">$0.00</span>
+                    <span class="card-amount" id="sumNeeds">₹0.00</span>
                 </div>
                 <div class="summary-card wants">
                     <span class="card-label">Wants</span>
-                    <span class="card-amount" id="sumWants">$0.00</span>
+                    <span class="card-amount" id="sumWants">₹0.00</span>
                 </div>
                 <div class="summary-card savings">
                     <span class="card-label">Savings</span>
-                    <span class="card-amount" id="sumSavings">$0.00</span>
+                    <span class="card-amount" id="sumSavings">₹0.00</span>
                 </div>
             </div>
 
@@ -682,7 +700,7 @@
         <section id="viewLifetime" class="view">
             <div class="lifetime-banner">
                 <div class="lifetime-title">Lifetime Spending</div>
-                <div class="lifetime-val" id="lifetimeTotal">$0.00</div>
+                <div class="lifetime-val" id="lifetimeTotal">₹0.00</div>
             </div>
             <div class="section-title">Monthly Summary</div>
             <div id="lifetimeList">
@@ -745,7 +763,7 @@
             </div>
             <div style="text-align: center; margin: 16px 0;">
                 <div class="icon-badge" id="detailBadge" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 12px;"></div>
-                <div style="font-size: 28px; font-weight: 800;" id="detailAmount">$0.00</div>
+                <div style="font-size: 28px; font-weight: 800;" id="detailAmount">₹0.00</div>
                 <div style="color: var(--text-secondary); font-size: 14px;" id="detailSubcategory">Subcategory</div>
             </div>
             <div style="background: var(--bg-color); border-radius: var(--radius-lg); padding: 12px; margin-bottom: 20px;">
@@ -777,7 +795,7 @@
                 <input type="hidden" id="txId">
 
                 <div class="form-group">
-                    <label class="form-label">Amount ($)</label>
+                    <label class="form-label">Amount (₹)</label>
                     <input type="number" step="0.01" class="form-input" id="txAmount" placeholder="0.00" required>
                 </div>
 
@@ -788,8 +806,8 @@
 
                 <div class="form-group">
                     <label class="form-label">Subcategory</label>
-                    <div class="icon-grid" id="categoryGrid">
-                        <!-- Dynamically Populated -->
+                    <div id="categoryContainer">
+                        <!-- Dynamically Populated with Separate Sections -->
                     </div>
                 </div>
 
@@ -827,19 +845,37 @@
 </div>
 
 <script>
+    /* Prevent Right-Click / Context Menu */
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    /* Disable Click-and-Hold / Touch Callout globally */
+    document.addEventListener('touchstart', function(e) {
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
     /* ==========================================
        1. DATA CONFIGURATION & ICON MAPPINGS
        ========================================== */
     const CONFIG = {
         categories: [
+            // Needs
             { name: 'Rent', type: 'Needs', icon: 'fa-house', bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981' },
             { name: 'Groceries', type: 'Needs', icon: 'fa-cart-shopping', bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981' },
-            { name: 'Utilities', type: 'Needs', icon: 'fa-bolt', bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981' },
-            { name: 'Dining', type: 'Wants', icon: 'fa-utensils', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
+            { name: 'Bills', type: 'Needs', icon: 'fa-file-invoice-dollar', bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981' },
+            // Wants
+            { name: 'Clothing', type: 'Wants', icon: 'fa-shirt', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
+            { name: 'Eating out', type: 'Wants', icon: 'fa-utensils', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
+            { name: 'Travel', type: 'Wants', icon: 'fa-plane', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
+            { name: 'Subscriptions', type: 'Wants', icon: 'fa-tv', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
+            { name: 'Electronics', type: 'Wants', icon: 'fa-laptop', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
             { name: 'Shopping', type: 'Wants', icon: 'fa-bag-shopping', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
-            { name: 'Hobbies', type: 'Wants', icon: 'fa-gamepad', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
-            { name: 'Emergency', type: 'Savings', icon: 'fa-shield-halved', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' },
-            { name: 'Investment', type: 'Savings', icon: 'fa-chart-pie', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' }
+            // Savings
+            { name: 'FD', type: 'Savings', icon: 'fa-piggy-bank', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' },
+            { name: 'Mutual/Index Fund', type: 'Savings', icon: 'fa-chart-line', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' },
+            { name: 'Bank', type: 'Savings', icon: 'fa-building-columns', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' },
+            { name: 'Pension', type: 'Savings', icon: 'fa-coins', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' }
         ],
         sources: [
             { name: 'UPI', icon: 'fa-qrcode', bg: 'rgba(139, 92, 246, 0.15)', color: '#8b5cf6' },
@@ -877,9 +913,7 @@
                 const line = lines[i].trim();
                 if (!line) continue;
 
-                // Regex to safely parse quoted CSV values
-                const matches = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-                const parts = line.split(','); // Fallback straightforward split if no complex quotes
+                const parts = line.split(',');
 
                 if (parts.length >= 6) {
                     result.push({
@@ -898,9 +932,7 @@
         getExpenses() {
             let raw = localStorage.getItem(this.KEY);
             if (!raw) {
-                // Default Pre-populated Sample Data
-                const defaultData = [
-                ];
+                const defaultData = [];
                 raw = this.serializeCSV(defaultData);
                 localStorage.setItem(this.KEY, raw);
             }
@@ -981,9 +1013,9 @@
             if (e.type === 'Savings') savings += e.amount;
         });
 
-        document.getElementById('sumNeeds').innerText = `$${needs.toFixed(2)}`;
-        document.getElementById('sumWants').innerText = `$${wants.toFixed(2)}`;
-        document.getElementById('sumSavings').innerText = `$${savings.toFixed(2)}`;
+        document.getElementById('sumNeeds').innerText = `₹${needs.toFixed(2)}`;
+        document.getElementById('sumWants').innerText = `₹${wants.toFixed(2)}`;
+        document.getElementById('sumSavings').innerText = `₹${savings.toFixed(2)}`;
 
         // Render Transaction List (Newest first)
         const listEl = document.getElementById('monthlyTxList');
@@ -1016,7 +1048,7 @@
               <span class="tx-sub">${item.date} • ${item.source}</span>
             </div>
           </div>
-          <div class="tx-amount">$${item.amount.toFixed(2)}</div>
+          <div class="tx-amount">₹${item.amount.toFixed(2)}</div>
         `;
             listEl.appendChild(el);
         });
@@ -1027,7 +1059,7 @@
        ========================================== */
     function renderLifetimeView() {
         const lifetimeSum = currentExpenses.reduce((acc, e) => acc + e.amount, 0);
-        document.getElementById('lifetimeTotal').innerText = `$${lifetimeSum.toFixed(2)}`;
+        document.getElementById('lifetimeTotal').innerText = `₹${lifetimeSum.toFixed(2)}`;
 
         // Group by Month (YYYY-MM)
         const grouped = {};
@@ -1053,7 +1085,7 @@
             card.className = 'month-group-card';
             card.innerHTML = `
           <span style="font-weight: 600;">${formattedMonth}</span>
-          <span style="font-weight: 700; color: var(--accent-primary);">$${grouped[ym].toFixed(2)}</span>
+          <span style="font-weight: 700; color: var(--accent-primary);">₹${grouped[ym].toFixed(2)}</span>
         `;
             listEl.appendChild(card);
         });
@@ -1156,20 +1188,35 @@
        9. FORM BUILDER & MODAL WORKFLOWS
        ========================================== */
     function buildFormGrids() {
-        const catGrid = document.getElementById('categoryGrid');
-        catGrid.innerHTML = '';
-        CONFIG.categories.forEach(cat => {
-            const item = document.createElement('div');
-            item.className = 'grid-item';
-            item.dataset.name = cat.name;
-            item.onclick = () => selectCategory(cat, item);
-            item.innerHTML = `
-          <div class="icon-badge" style="background:${cat.bg}; color:${cat.color}; width:32px; height:32px; font-size:14px;">
-            <i class="fa-solid ${cat.icon}"></i>
-          </div>
-          <span>${cat.name}</span>
-        `;
-            catGrid.appendChild(item);
+        const catContainer = document.getElementById('categoryContainer');
+        catContainer.innerHTML = '';
+
+        const types = ['Needs', 'Wants', 'Savings'];
+        types.forEach(type => {
+            const titleEl = document.createElement('div');
+            titleEl.className = 'category-section-title';
+            titleEl.innerText = type;
+            catContainer.appendChild(titleEl);
+
+            const gridEl = document.createElement('div');
+            gridEl.className = 'icon-grid';
+
+            const filteredCategories = CONFIG.categories.filter(c => c.type === type);
+            filteredCategories.forEach(cat => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.dataset.name = cat.name;
+                item.onclick = () => selectCategory(cat, item);
+                item.innerHTML = `
+              <div class="icon-badge" style="background:${cat.bg}; color:${cat.color}; width:32px; height:32px; font-size:14px;">
+                <i class="fa-solid ${cat.icon}"></i>
+              </div>
+              <span>${cat.name}</span>
+            `;
+                gridEl.appendChild(item);
+            });
+
+            catContainer.appendChild(gridEl);
         });
 
         const srcGrid = document.getElementById('sourceGrid');
@@ -1190,7 +1237,7 @@
     }
 
     function selectCategory(cat, element) {
-        document.querySelectorAll('#categoryGrid .grid-item').forEach(e => e.classList.remove('selected'));
+        document.querySelectorAll('#categoryContainer .grid-item').forEach(e => e.classList.remove('selected'));
         element.classList.add('selected');
         selectedCategory = cat;
     }
@@ -1222,7 +1269,7 @@
         badge.style.color = catConfig.color;
         badge.innerHTML = `<i class="fa-solid ${catConfig.icon}"></i>`;
 
-        document.getElementById('detailAmount').innerText = `$${tx.amount.toFixed(2)}`;
+        document.getElementById('detailAmount').innerText = `₹${tx.amount.toFixed(2)}`;
         document.getElementById('detailSubcategory').innerText = tx.subcategory;
         document.getElementById('detailType').innerText = tx.type;
         document.getElementById('detailSource').innerText = tx.source;
@@ -1244,7 +1291,7 @@
 
         // Preselect Category
         const catObj = CONFIG.categories.find(c => c.name === tx.subcategory);
-        const catElem = document.querySelector(`#categoryGrid [data-name="${tx.subcategory}"]`);
+        const catElem = document.querySelector(`#categoryContainer [data-name="${tx.subcategory}"]`);
         if (catObj && catElem) selectCategory(catObj, catElem);
 
         // Preselect Source
@@ -1279,12 +1326,6 @@
                 switchView(viewId, title);
             };
         });
-
-        // Refresh Button
-        document.getElementById('refreshBtn').onclick = () => {
-            initApp();
-            showToast('Data refreshed');
-        };
 
         // FAB
         document.getElementById('fabAdd').onclick = openAddModal;
@@ -1321,9 +1362,9 @@
                     showToast('Entry updated successfully');
                 }
             } else {
-                // Add New Entry
+                // Add New Entry with UUID
                 const newEntry = {
-                    id: Date.now().toString(),
+                    id: crypto.randomUUID ? crypto.randomUUID() : ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)),
                     date,
                     amount,
                     type: selectedCategory.type,
