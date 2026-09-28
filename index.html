@@ -7,7 +7,8 @@
     <!-- Google Fonts & FontAwesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -82,7 +83,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: 0 0 40px rgba(0,0,0,0.15);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
             overflow-x: hidden;
         }
 
@@ -224,8 +225,14 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Screen 1: Home Cards */
@@ -251,13 +258,23 @@
         .summary-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 3px;
         }
 
-        .summary-card.needs::before { background: var(--accent-needs); }
-        .summary-card.wants::before { background: var(--accent-wants); }
-        .summary-card.savings::before { background: var(--accent-savings); }
+        .summary-card.needs::before {
+            background: var(--accent-needs);
+        }
+
+        .summary-card.wants::before {
+            background: var(--accent-wants);
+        }
+
+        .summary-card.savings::before {
+            background: var(--accent-savings);
+        }
 
         .card-label {
             font-size: 11px;
@@ -371,7 +388,7 @@
         .fab {
             position: fixed;
             bottom: 24px;
-            right: max(24px, calc((100vw - 480px)/2 + 24px));
+            right: max(24px, calc((100vw - 480px) / 2 + 24px));
             width: 56px;
             height: 56px;
             border-radius: 28px;
@@ -526,7 +543,7 @@
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(6px);
             z-index: 100;
             display: flex;
@@ -645,7 +662,7 @@
             border-radius: 30px;
             font-size: 13px;
             font-weight: 600;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
             z-index: 200;
             transition: var(--transition);
             display: flex;
@@ -764,8 +781,10 @@
                     </label>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-primary" id="btnDownloadCSV"><i class="fa-solid fa-download"></i> CSV File</button>
-                    <button class="btn btn-secondary" id="btnCopyCSV"><i class="fa-solid fa-copy"></i> Clipboard</button>
+                    <button class="btn btn-primary" id="btnDownloadCSV"><i class="fa-solid fa-download"></i> CSV File
+                    </button>
+                    <button class="btn btn-secondary" id="btnCopyCSV"><i class="fa-solid fa-copy"></i> Clipboard
+                    </button>
                 </div>
             </div>
         </section>
@@ -780,10 +799,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">Transaction Details</div>
-                <button class="header-btn" onclick="closeModal('detailModal')"><i class="fa-solid fa-xmark"></i></button>
+                <button class="header-btn" onclick="closeModal('detailModal')"><i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
             <div style="text-align: center; margin: 16px 0;">
-                <div class="icon-badge" id="detailBadge" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 12px;"></div>
+                <div class="icon-badge" id="detailBadge"
+                     style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 12px;"></div>
                 <div style="font-size: 28px; font-weight: 800;" id="detailAmount">₹0.00</div>
                 <div style="color: var(--text-secondary); font-size: 14px;" id="detailSubcategory">Subcategory</div>
             </div>
@@ -801,7 +822,9 @@
                     <span id="detailDate" style="font-weight: 600;">-</span>
                 </div>
             </div>
-            <button class="btn btn-primary" id="btnEditShortcut" style="width: 100%;"><i class="fa-solid fa-pen-to-square"></i> Edit Entry</button>
+            <button class="btn btn-primary" id="btnEditShortcut" style="width: 100%;"><i
+                    class="fa-solid fa-pen-to-square"></i> Edit Entry
+            </button>
         </div>
     </div>
 
@@ -840,7 +863,9 @@
                 </div>
 
                 <div class="btn-group" style="margin-top: 20px;">
-                    <button type="button" class="btn btn-danger" id="btnDeleteTx" style="display: none;"><i class="fa-solid fa-trash"></i> Delete</button>
+                    <button type="button" class="btn btn-danger" id="btnDeleteTx" style="display: none;"><i
+                            class="fa-solid fa-trash"></i> Delete
+                    </button>
                     <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Save Entry</button>
                 </div>
             </form>
@@ -850,9 +875,12 @@
     <!-- CONFIRMATION MODAL -->
     <div class="modal-overlay" id="confirmModal">
         <div class="modal-content" style="text-align: center;">
-            <div style="font-size: 36px; color: var(--danger-color); margin-bottom: 12px;"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div style="font-size: 36px; color: var(--danger-color); margin-bottom: 12px;"><i
+                    class="fa-solid fa-circle-exclamation"></i></div>
             <div style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Are you sure?</div>
-            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">This action cannot be undone.</div>
+            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">This action cannot be
+                undone.
+            </div>
             <div class="btn-group">
                 <button class="btn btn-secondary" onclick="closeModal('confirmModal')">Cancel</button>
                 <button class="btn btn-danger" id="btnConfirmAction">Delete</button>
@@ -870,11 +898,11 @@
     document.addEventListener('contextmenu', e => e.preventDefault());
 
     /* Disable Click-and-Hold / Touch Callout globally */
-    document.addEventListener('touchstart', function(e) {
+    document.addEventListener('touchstart', function (e) {
         if (e.touches.length > 1) {
             e.preventDefault();
         }
-    }, { passive: false });
+    }, {passive: false});
 
     /* ==========================================
        1. DATA CONFIGURATION & ICON MAPPINGS
@@ -882,27 +910,57 @@
     const CONFIG = {
         categories: [
             // Needs
-            { name: 'Rent', type: 'Needs', icon: 'fa-house', bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981' },
-            { name: 'Groceries', type: 'Needs', icon: 'fa-cart-shopping', bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981' },
-            { name: 'Bills', type: 'Needs', icon: 'fa-file-invoice-dollar', bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981' },
+            {name: 'Rent', type: 'Needs', icon: 'fa-house', bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981'},
+            {
+                name: 'Groceries',
+                type: 'Needs',
+                icon: 'fa-cart-shopping',
+                bg: 'rgba(16, 185, 129, 0.15)',
+                color: '#10b981'
+            },
+            {
+                name: 'Bills',
+                type: 'Needs',
+                icon: 'fa-file-invoice-dollar',
+                bg: 'rgba(16, 185, 129, 0.15)',
+                color: '#10b981'
+            },
             // Wants
-            { name: 'Clothing', type: 'Wants', icon: 'fa-shirt', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
-            { name: 'Eating out', type: 'Wants', icon: 'fa-utensils', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
-            { name: 'Travel', type: 'Wants', icon: 'fa-plane', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
-            { name: 'Subscriptions', type: 'Wants', icon: 'fa-tv', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
-            { name: 'Electronics', type: 'Wants', icon: 'fa-laptop', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
-            { name: 'Shopping', type: 'Wants', icon: 'fa-bag-shopping', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' },
+            {name: 'Clothing', type: 'Wants', icon: 'fa-shirt', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b'},
+            {name: 'Eating out', type: 'Wants', icon: 'fa-utensils', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b'},
+            {name: 'Travel', type: 'Wants', icon: 'fa-plane', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b'},
+            {name: 'Subscriptions', type: 'Wants', icon: 'fa-tv', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b'},
+            {name: 'Electronics', type: 'Wants', icon: 'fa-laptop', bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b'},
+            {
+                name: 'Shopping',
+                type: 'Wants',
+                icon: 'fa-bag-shopping',
+                bg: 'rgba(245, 158, 11, 0.15)',
+                color: '#f59e0b'
+            },
             // Savings
-            { name: 'FD', type: 'Savings', icon: 'fa-piggy-bank', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' },
-            { name: 'Mutual/Index Fund', type: 'Savings', icon: 'fa-chart-line', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' },
-            { name: 'Bank', type: 'Savings', icon: 'fa-building-columns', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' },
-            { name: 'Pension', type: 'Savings', icon: 'fa-coins', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' }
+            {name: 'FD', type: 'Savings', icon: 'fa-piggy-bank', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6'},
+            {
+                name: 'Mutual/Index Fund',
+                type: 'Savings',
+                icon: 'fa-chart-line',
+                bg: 'rgba(59, 130, 246, 0.15)',
+                color: '#3b82f6'
+            },
+            {
+                name: 'Bank',
+                type: 'Savings',
+                icon: 'fa-building-columns',
+                bg: 'rgba(59, 130, 246, 0.15)',
+                color: '#3b82f6'
+            },
+            {name: 'Pension', type: 'Savings', icon: 'fa-coins', bg: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6'}
         ],
         sources: [
-            { name: 'UPI', icon: 'fa-qrcode', bg: 'rgba(139, 92, 246, 0.15)', color: '#8b5cf6' },
-            { name: 'Credit Card', icon: 'fa-credit-card', bg: 'rgba(236, 72, 153, 0.15)', color: '#ec4899' },
-            { name: 'Cash', icon: 'fa-money-bill-wave', bg: 'rgba(34, 197, 94, 0.15)', color: '#22c55e' },
-            { name: 'Bank Transfer', icon: 'fa-building-columns', bg: 'rgba(14, 165, 233, 0.15)', color: '#0ea5e9' }
+            {name: 'UPI/Cash', icon: 'fa-qrcode', bg: 'rgba(139, 92, 246, 0.15)', color: '#8b5cf6'},
+            {name: 'HDFC CC', icon: 'fa-credit-card', bg: 'rgba(0, 75, 135, 0.15)', color: '#004b87'},
+            {name: 'ICICI CC', icon: 'fa-credit-card', bg: 'rgba(243, 112, 33, 0.15)', color: '#f37021'},
+            {name: 'AXIS CC', icon: 'fa-credit-card', bg: 'rgba(147, 28, 50, 0.15)', color: '#931c32'},
         ]
     };
 
@@ -1061,7 +1119,11 @@
         }
 
         sortedData.forEach(item => {
-            const catConfig = CONFIG.categories.find(c => c.name === item.subcategory) || { icon: 'fa-tag', bg: 'rgba(156, 163, 175, 0.15)', color: '#9ca3af' };
+            const catConfig = CONFIG.categories.find(c => c.name === item.subcategory) || {
+                icon: 'fa-tag',
+                bg: 'rgba(156, 163, 175, 0.15)',
+                color: '#9ca3af'
+            };
 
             const el = document.createElement('div');
             el.className = 'transaction-item';
@@ -1107,7 +1169,7 @@
 
         sortedMonths.forEach(ym => {
             const dateObj = new Date(ym + '-01');
-            const formattedMonth = dateObj.toLocaleString('default', { month: 'long', year: 'numeric' });
+            const formattedMonth = dateObj.toLocaleString('default', {month: 'long', year: 'numeric'});
 
             const card = document.createElement('div');
             card.className = 'month-group-card';
@@ -1126,7 +1188,7 @@
         const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
 
         // Category Aggregation
-        const categoryData = { Needs: 0, Wants: 0, Savings: 0 };
+        const categoryData = {Needs: 0, Wants: 0, Savings: 0};
         currentExpenses.forEach(e => {
             if (categoryData[e.type] !== undefined) categoryData[e.type] += e.amount;
         });
@@ -1153,7 +1215,11 @@
                     borderWidth: 0
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: labelColor } } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {legend: {position: 'bottom', labels: {color: labelColor}}}
+            }
         });
 
         // Source Doughnut Chart
@@ -1168,7 +1234,11 @@
                     borderWidth: 0
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: labelColor } } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {legend: {position: 'bottom', labels: {color: labelColor}}}
+            }
         });
     }
 
@@ -1197,7 +1267,7 @@
         const csvContent = "data:text/csv;charset=utf-8," + encodeURIComponent(ApiStub.serializeCSV(data));
         const link = document.createElement("a");
         link.setAttribute("href", csvContent);
-        link.setAttribute("download", `expenses_export_${new Date().toISOString().slice(0,10)}.csv`);
+        link.setAttribute("download", `expenses_export_${new Date().toISOString().slice(0, 10)}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -1292,7 +1362,11 @@
 
     function openDetailModal(tx) {
         activeTxId = tx.id;
-        const catConfig = CONFIG.categories.find(c => c.name === tx.subcategory) || { icon: 'fa-tag', bg: 'rgba(156, 163, 175, 0.15)', color: '#9ca3af' };
+        const catConfig = CONFIG.categories.find(c => c.name === tx.subcategory) || {
+            icon: 'fa-tag',
+            bg: 'rgba(156, 163, 175, 0.15)',
+            color: '#9ca3af'
+        };
 
         const badge = document.getElementById('detailBadge');
         badge.style.background = catConfig.bg;
@@ -1394,7 +1468,7 @@
             } else {
                 // Add New Entry with UUID
                 const newEntry = {
-                    id: crypto.randomUUID ? crypto.randomUUID() : ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)),
+                    id: crypto.randomUUID ? crypto.randomUUID() : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)),
                     date,
                     amount,
                     type: selectedCategory.type,
