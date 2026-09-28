@@ -30,16 +30,6 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
-            /* Disable long-press context menus, callouts, and text selection across the page */
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -webkit-user-drag: none;
-            user-select: none;
-        }
-
-        input {
-            -webkit-user-select: auto;
-            user-select: auto;
         }
 
         body {
@@ -48,7 +38,6 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
         #app {
@@ -246,51 +235,20 @@
         .fab-add {
             position: fixed;
             bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 64px;
-            height: 64px;
+            left: 24px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            background-color: var(--primary-color);
             color: white;
-            border: 3px solid #ffffff;
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.5);
+            border: none;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            z-index: 100;
-            touch-action: none;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .fab-add:active, .fab-add.holding {
-            transform: translateX(-50%) scale(1.15);
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.8);
-        }
-
-        .fab-hint {
-            position: fixed;
-            bottom: 92px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.75);
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            pointer-events: none;
-            backdrop-filter: blur(4px);
-            z-index: 99;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-4px); }
+            z-index: 10;
         }
 
         /* Form Fields */
@@ -329,7 +287,7 @@
         .title-wants { background: var(--wants-bg); color: var(--wants-color); }
         .title-savings { background: var(--savings-bg); color: var(--savings-color); }
 
-        /* Round Icon Grids */
+        /* Round Icon Grids (No Text) */
         .grid-options-round {
             display: flex;
             flex-wrap: wrap;
@@ -415,64 +373,6 @@
             margin-top: 10px;
         }
 
-        .export-card {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .export-card .export-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            flex: 1;
-        }
-
-        .export-card .export-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .export-card .export-sub {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .export-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .export-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .export-btn.secondary {
-            background: var(--bg-color);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-        }
-
-        .export-btn:active {
-            opacity: 0.9;
-        }
-
         .chart-container {
             background: white;
             border: 1px solid var(--border-color);
@@ -488,266 +388,6 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-
-        /* CRAZY SLIDE & NUMPAD OVERLAY */
-        #crazy-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(12px);
-            z-index: 200;
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px 16px;
-            color: white;
-            touch-action: none;
-            overflow: hidden;
-            animation: fadeIn 0.2s ease-out;
-        }
-
-        #crazy-overlay.active { display: flex; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .crazy-header {
-            text-align: center;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .crazy-step-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: #818cf8;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 8px;
-        }
-
-        .crazy-title {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .crazy-subtitle {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-top: 4px;
-        }
-
-        /* Circles Ring Container Centered Dynamically on Button Position */
-        .circle-ring-container {
-            position: fixed;
-            width: 0;
-            height: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-        }
-
-        .center-indicator {
-            position: absolute;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #6366f1 0%, #4f46e5 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 25px rgba(99, 102, 241, 0.8);
-            z-index: 5;
-            text-align: center;
-            padding: 4px;
-            pointer-events: none;
-            transition: all 0.2s ease;
-            transform: translate(-50%, -50%);
-        }
-
-        .center-indicator i { font-size: 1.3rem; color: white; }
-        .center-indicator span { font-size: 0.6rem; font-weight: 700; color: white; margin-top: 2px; }
-
-        .gesture-circle-item {
-            position: absolute;
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.12);
-            border: 2px solid rgba(255, 255, 255, 0.25);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            color: white;
-            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.15s, border-color 0.15s, box-shadow 0.15s;
-            cursor: pointer;
-            touch-action: none;
-            pointer-events: auto;
-            margin-left: -27px;
-            margin-top: -27px;
-        }
-
-        .gesture-circle-item .item-label {
-            position: absolute;
-            bottom: -22px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            white-space: nowrap;
-            color: #cbd5e1;
-            background: rgba(0,0,0,0.7);
-            padding: 1px 6px;
-            border-radius: 10px;
-            pointer-events: none;
-        }
-
-        .gesture-circle-item.hovered {
-            transform: translate(var(--tx), var(--ty)) scale(1.35) !important;
-            background: #6366f1 !important;
-            border-color: #a5b4fc !important;
-            box-shadow: 0 0 25px #6366f1, 0 0 10px #ffffff;
-            z-index: 10;
-        }
-
-        /* Numpad View */
-        #crazy-numpad-view {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 360px;
-            margin: auto;
-        }
-
-        #crazy-numpad-view.active { display: flex; }
-
-        .numpad-selection-summary {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px 16px;
-            border-radius: 30px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255,255,255,0.15);
-        }
-
-        .numpad-selection-summary .badge-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .amount-display-container {
-            text-align: center;
-            margin-bottom: 12px;
-            width: 100%;
-        }
-
-        .amount-display {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #67e8f9;
-            letter-spacing: -1px;
-            text-shadow: 0 0 20px rgba(103, 232, 249, 0.4);
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 5 Second Timer Bar */
-        .timer-container {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .timer-bar {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
-            transform-origin: left;
-            transition: width 0.1s linear;
-        }
-
-        .timer-text {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            margin-bottom: 16px;
-            font-weight: 600;
-        }
-
-        /* Numpad Grid */
-        .numpad-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            width: 100%;
-        }
-
-        .num-btn {
-            height: 60px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-
-        .num-btn:active {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(0.94);
-        }
-
-        .num-btn.action-btn {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        .crazy-close-btn {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            font-size: 1.5rem;
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .crazy-close-btn:active { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -771,7 +411,6 @@
             <li data-page="page-monthly" class="active"><i class="fa-solid fa-calendar-days"></i> Monthly Expenses</li>
             <li data-page="page-all-time"><i class="fa-solid fa-vault"></i> All Months Total</li>
             <li data-page="page-breakdown"><i class="fa-solid fa-chart-pie"></i> Expense Breakdown</li>
-            <li data-page="page-export"><i class="fa-solid fa-file-csv"></i> Export Data</li>
             <li data-page="page-icon-guide"><i class="fa-solid fa-icons"></i> Icon Guide</li>
         </ul>
     </aside>
@@ -819,45 +458,7 @@
             </div>
         </div>
 
-        <!-- Page 4: Export Data -->
-        <div id="page-export" class="page">
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Copy CSV data to clipboard or download it as a file.</p>
-
-            <div class="export-card">
-                <div class="export-info">
-                    <div class="export-title">This Month</div>
-                    <div class="export-sub" id="export-this-month-count">0 entries</div>
-                </div>
-                <div class="export-actions">
-                    <button class="export-btn secondary" id="btn-copy-this-month"><i class="fa-solid fa-copy"></i> Copy</button>
-                    <button class="export-btn" id="btn-export-this-month"><i class="fa-solid fa-download"></i> Download</button>
-                </div>
-            </div>
-
-            <div class="export-card">
-                <div class="export-info">
-                    <div class="export-title">Last Month</div>
-                    <div class="export-sub" id="export-last-month-count">0 entries</div>
-                </div>
-                <div class="export-actions">
-                    <button class="export-btn secondary" id="btn-copy-last-month"><i class="fa-solid fa-copy"></i> Copy</button>
-                    <button class="export-btn" id="btn-export-last-month"><i class="fa-solid fa-download"></i> Download</button>
-                </div>
-            </div>
-
-            <div class="export-card">
-                <div class="export-info">
-                    <div class="export-title">Overall</div>
-                    <div class="export-sub" id="export-overall-count">0 entries</div>
-                </div>
-                <div class="export-actions">
-                    <button class="export-btn secondary" id="btn-copy-overall"><i class="fa-solid fa-copy"></i> Copy</button>
-                    <button class="export-btn" id="btn-export-overall"><i class="fa-solid fa-download"></i> Download</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Page 5: Icon Guide -->
+        <!-- Page 4: Icon Guide -->
         <div id="page-icon-guide" class="page">
             <h3 style="font-size:0.85rem; margin-bottom:12px; text-transform:uppercase; color:var(--text-muted);">Defined in Configs (JSON)</h3>
             <div id="used-icons-container" class="icon-guide-grid"></div>
@@ -869,68 +470,8 @@
         </div>
     </main>
 
-    <!-- Floating Add Button with hold-gesture support -->
-    <div class="fab-hint">Hold & Slide</div>
+    <!-- Floating Add Button -->
     <button class="fab-add" id="btn-open-add"><i class="fa-solid fa-plus"></i></button>
-
-    <!-- Crazy Slide & Hold Input Overlay -->
-    <div id="crazy-overlay">
-        <button class="crazy-close-btn" id="btn-close-crazy"><i class="fa-solid fa-xmark"></i></button>
-
-        <div class="crazy-header">
-            <div class="crazy-step-badge" id="crazy-step-badge">Step 1</div>
-            <div class="crazy-title" id="crazy-title">Select Category</div>
-            <div class="crazy-subtitle" id="crazy-subtitle">Keep holding & slide finger onto a circle</div>
-        </div>
-
-        <!-- Wheel / Ring Selection View -->
-        <div class="circle-ring-container" id="circle-ring-container">
-            <div class="center-indicator" id="center-indicator">
-                <i class="fa-solid fa-hand-pointer" id="center-icon"></i>
-                <span id="center-text">SLIDE</span>
-            </div>
-            <div id="circles-wrapper"></div>
-        </div>
-
-        <!-- Numpad Auto-Save View -->
-        <div id="crazy-numpad-view">
-            <div class="numpad-selection-summary">
-                <div class="badge-pill" id="summary-cat-badge">
-                    <i class="fa-solid fa-tag"></i> <span id="summary-cat-text">Food</span>
-                </div>
-                <i class="fa-solid fa-arrow-right" style="font-size:0.75rem; color:#94a3b8;"></i>
-                <div class="badge-pill" id="summary-src-badge">
-                    <i class="fa-solid fa-credit-card"></i> <span id="summary-src-text">UPI</span>
-                </div>
-            </div>
-
-            <div class="amount-display-container">
-                <div class="amount-display" id="crazy-amount-val">₹0</div>
-            </div>
-
-            <div class="timer-container">
-                <div class="timer-bar" id="crazy-timer-bar"></div>
-            </div>
-            <div class="timer-text" id="crazy-timer-text">Saving automatically in 5.0s after last tap...</div>
-
-            <div class="numpad-grid">
-                <button class="num-btn" data-key="1">1</button>
-                <button class="num-btn" data-key="2">2</button>
-                <button class="num-btn" data-key="3">3</button>
-                <button class="num-btn" data-key="4">4</button>
-                <button class="num-btn" data-key="5">5</button>
-                <button class="num-btn" data-key="6">6</button>
-                <button class="num-btn" data-key="7">7</button>
-                <button class="num-btn" data-key="8">8</button>
-                <button class="num-btn" data-key="9">9</button>
-                <button class="num-btn" data-key=".">.</button>
-                <button class="num-btn" data-key="0">0</button>
-                <button class="num-btn action-btn" data-key="backspace"><i class="fa-solid fa-backspace"></i></button>
-            </div>
-        </div>
-
-        <div style="height: 10px;"></div>
-    </div>
 
     <!-- Read-Only Full Window View Modal -->
     <div class="modal" id="modal-view">
@@ -1011,28 +552,11 @@
 </div>
 
 <script>
-    // Disable global context menu (long press / right click popup)
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-
-    let PAYMENT_SOURCES_CONFIG = ["Cash", "UPI", "SBI CC", "ICICI CC", "AXIS CC", "HDFC CC", "Debit Card"];
-    let CATEGORIES_CONFIG = {
-        "Needs": ["Rent", "Groceries", "Bills", "Medicines", "Fuel", "Electricity"],
-        "Wants": ["Eating out", "Clothing", "Travel", "Subscriptions", "Coffee", "Shopping"],
-        "Savings": ["FD", "Mutual/Index Fund", "Bank", "Gold/SGB"]
-    };
-
-    function generateUUID() {
-        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-            return crypto.randomUUID();
-        }
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
+    let PAYMENT_SOURCES_CONFIG = [];
+    let CATEGORIES_CONFIG = {};
 
     const ICON_MAP = {
+        // Current / Standard Mappings[cite: 1]
         "Rent": { icon: "fa-house", bg: "#d1fae5", color: "#059669" },
         "Groceries": { icon: "fa-basket-shopping", bg: "#d1fae5", color: "#059669" },
         "Bills": { icon: "fa-file-invoice-dollar", bg: "#d1fae5", color: "#059669" },
@@ -1051,6 +575,8 @@
         "ICICI CC": { icon: "fa-credit-card", bg: "#ffedd5", color: "#ea580c" },
         "AXIS CC": { icon: "fa-credit-card", bg: "#ccfbf1", color: "#0d9488" },
         "Default": { icon: "fa-receipt", bg: "#f3f4f6", color: "#4b5563" },
+
+        // Additional Needs Mappings
         "Electricity": { icon: "fa-bolt", bg: "#d1fae5", color: "#059669" },
         "Water": { icon: "fa-droplet", bg: "#d1fae5", color: "#059669" },
         "Internet": { icon: "fa-wifi", bg: "#d1fae5", color: "#059669" },
@@ -1061,6 +587,8 @@
         "Education/Tuition": { icon: "fa-graduation-cap", bg: "#d1fae5", color: "#059669" },
         "Maintenance": { icon: "fa-wrench", bg: "#d1fae5", color: "#059669" },
         "Childcare": { icon: "fa-baby", bg: "#d1fae5", color: "#059669" },
+
+        // Additional Wants Mappings
         "Coffee": { icon: "fa-mug-hot", bg: "#fef3c7", color: "#d97706" },
         "Movies/Cinema": { icon: "fa-film", bg: "#fef3c7", color: "#d97706" },
         "Gym/Fitness": { icon: "fa-dumbbell", bg: "#fef3c7", color: "#d97706" },
@@ -1071,11 +599,15 @@
         "Pets": { icon: "fa-dog", bg: "#fef3c7", color: "#d97706" },
         "Parties/Bar": { icon: "fa-wine-glass", bg: "#fef3c7", color: "#d97706" },
         "Vacation": { icon: "fa-umbrella-beach", bg: "#fef3c7", color: "#d97706" },
+
+        // Additional Savings & Investments Mappings
         "Gold/SGB": { icon: "fa-coins", bg: "#dbeafe", color: "#2563eb" },
         "Stocks/Equity": { icon: "fa-arrow-trend-up", bg: "#dbeafe", color: "#2563eb" },
         "Crypto": { icon: "fa-bitcoin-sign", bg: "#dbeafe", color: "#2563eb" },
         "Emergency Fund": { icon: "fa-life-ring", bg: "#dbeafe", color: "#2563eb" },
         "Real Estate": { icon: "fa-building", bg: "#dbeafe", color: "#2563eb" },
+
+        // Additional Payment Sources Mappings
         "UPI": { icon: "fa-qrcode", bg: "#e0e7ff", color: "#4f46e5" },
         "HDFC CC": { icon: "fa-credit-card", bg: "#fce7f3", color: "#db2777" },
         "Amex CC": { icon: "fa-credit-card", bg: "#dcfce7", color: "#16a34a" },
@@ -1083,7 +615,13 @@
         "Debit Card": { icon: "fa-id-card", bg: "#fef3c7", color: "#d97706" }
     };
 
-    const DEFAULT_CSV =`id,date,amount,type,subcategory,source`;
+    const DEFAULT_CSV =
+        `id,date,amount,type,subcategory,source
+1,2026-09-25,450.00,Needs,Groceries,SBI CC
+2,2026-09-24,1200.00,Wants,Eating out,ICICI CC
+3,2026-09-20,5000.00,Savings,Mutual/Index Fund,AXIS CC
+4,2026-09-15,350.00,Needs,Bills,Cash
+5,2026-08-10,2500.00,Wants,Shopping,SBI CC`;
 
     const ApiStub = {
         async fetchExpensesCSV() {
@@ -1121,57 +659,6 @@
         return [headers.join(','), ...rows].join('\n');
     }
 
-    function downloadCSV(csvContent, filename) {
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    }
-
-    async function copyCSVToClipboard(csvContent, buttonEl) {
-        try {
-            await navigator.clipboard.writeText(csvContent);
-            const originalHTML = buttonEl.innerHTML;
-            buttonEl.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
-            setTimeout(() => {
-                buttonEl.innerHTML = originalHTML;
-            }, 1500);
-        } catch (err) {
-            alert("Failed to copy to clipboard.");
-        }
-    }
-
-    function getFilteredExpenses(filterType) {
-        const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonth = now.getMonth();
-
-        if (filterType === 'this-month') {
-            return state.expenses.filter(item => {
-                const d = new Date(item.date);
-                return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
-            });
-        }
-
-        if (filterType === 'last-month') {
-            const lastMonthDate = new Date(currentYear, currentMonth - 1, 1);
-            const targetYear = lastMonthDate.getFullYear();
-            const targetMonth = lastMonthDate.getMonth();
-            return state.expenses.filter(item => {
-                const d = new Date(item.date);
-                return d.getFullYear() === targetYear && d.getMonth() === targetMonth;
-            });
-        }
-
-        return state.expenses;
-    }
-
     let state = {
         expenses: [],
         selectedType: null,
@@ -1204,10 +691,15 @@
                 fetch('./sources.json')
             ]);
 
-            if (expensesRes.ok) CATEGORIES_CONFIG = await expensesRes.json();
-            if (sourcesRes.ok) PAYMENT_SOURCES_CONFIG = await sourcesRes.json();
+            if (expensesRes.ok) {
+                CATEGORIES_CONFIG = await expensesRes.json();
+            }
+
+            if (sourcesRes.ok) {
+                PAYMENT_SOURCES_CONFIG = await sourcesRes.json();
+            }
         } catch (error) {
-            console.warn("Using default internal category/source configs");
+            console.error("Failed to load JSON configurations:", error);
         }
     }
 
@@ -1215,7 +707,6 @@
         await loadConfigs();
         setupEventListeners();
         buildFormRoundGrids();
-        setupCrazyGestureFlow();
         await loadDataFromStub();
     }
 
@@ -1281,7 +772,6 @@
         if (activePage === 'page-monthly') renderMonthlyPage();
         if (activePage === 'page-all-time') renderAllTimePage();
         if (activePage === 'page-breakdown') renderBreakdownPage();
-        if (activePage === 'page-export') renderExportPage();
         if (activePage === 'page-icon-guide') renderIconGuidePage();
     }
 
@@ -1293,7 +783,9 @@
         const currentYear = now.getFullYear();
         const currentMonth = now.getMonth();
 
-        let needsSum = 0, wantsSum = 0, savingsSum = 0;
+        let needsSum = 0;
+        let wantsSum = 0;
+        let savingsSum = 0;
 
         const monthlyExpenses = state.expenses.filter(item => {
             const d = new Date(item.date);
@@ -1400,29 +892,23 @@
     }
 
     function renderBreakdownPage() {
-        const categoryTotals = {};
+        const categoryTotals = { Needs: 0, Wants: 0, Savings: 0 };
         const sourceTotals = {};
 
         state.expenses.forEach(item => {
-            const catKey = item.subcategory || 'Uncategorized';
-            categoryTotals[catKey] = (categoryTotals[catKey] || 0) + item.amount;
-
-            const srcKey = item.source || 'Unknown';
-            sourceTotals[srcKey] = (sourceTotals[srcKey] || 0) + item.amount;
+            if (categoryTotals[item.type] !== undefined) categoryTotals[item.type] += item.amount;
+            sourceTotals[item.source] = (sourceTotals[item.source] || 0) + item.amount;
         });
-
-        const catColors = ['#10b981', '#f59e0b', '#3b82f6', '#6366f1', '#ec4899', '#f97316', '#14b8a6', '#8b5cf6', '#ef4444', '#06b6d4'];
-        const srcColors = ['#6366f1', '#ec4899', '#f97316', '#14b8a6', '#8b5cf6', '#10b981', '#f59e0b', '#3b82f6'];
 
         if (categoryChart) categoryChart.destroy();
         const ctxCat = document.getElementById('chart-category').getContext('2d');
         categoryChart = new Chart(ctxCat, {
             type: 'pie',
             data: {
-                labels: Object.keys(categoryTotals),
+                labels: ['Needs', 'Wants', 'Savings'],
                 datasets: [{
-                    data: Object.values(categoryTotals),
-                    backgroundColor: Object.keys(categoryTotals).map((_, idx) => catColors[idx % catColors.length])
+                    data: [categoryTotals.Needs, categoryTotals.Wants, categoryTotals.Savings],
+                    backgroundColor: ['#10b981', '#f59e0b', '#3b82f6']
                 }]
             },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
@@ -1436,21 +922,11 @@
                 labels: Object.keys(sourceTotals),
                 datasets: [{
                     data: Object.values(sourceTotals),
-                    backgroundColor: Object.keys(sourceTotals).map((_, idx) => srcColors[idx % srcColors.length])
+                    backgroundColor: ['#6366f1', '#ec4899', '#f97316', '#14b8a6', '#8b5cf6']
                 }]
             },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
-    }
-
-    function renderExportPage() {
-        const thisMonthItems = getFilteredExpenses('this-month');
-        const lastMonthItems = getFilteredExpenses('last-month');
-        const overallItems = getFilteredExpenses('overall');
-
-        document.getElementById('export-this-month-count').textContent = `${thisMonthItems.length} entries`;
-        document.getElementById('export-last-month-count').textContent = `${lastMonthItems.length} entries`;
-        document.getElementById('export-overall-count').textContent = `${overallItems.length} entries`;
     }
 
     function renderIconGuidePage() {
@@ -1539,374 +1015,6 @@
         modalExpense.classList.remove('active');
     }
 
-    function handleExport(type, action, buttonEl) {
-        const filtered = getFilteredExpenses(type);
-        if (filtered.length === 0) {
-            alert("No data available to export for the selected range.");
-            return;
-        }
-
-        const csvContent = convertToCSV(filtered);
-
-        if (action === 'download') {
-            const dateStr = new Date().toISOString().split('T')[0];
-            downloadCSV(csvContent, `expenses_${type}_${dateStr}.csv`);
-        } else if (action === 'copy') {
-            copyCSVToClipboard(csvContent, buttonEl);
-        }
-    }
-
-    /* ==========================================================================
-       CRAZY GESTURE & NUMPAD FLOW LOGIC
-       ========================================================================== */
-    let crazyState = {
-        step: 1, // 1: category, 2: source, 3: numpad
-        selectedCategory: null,
-        selectedType: null,
-        selectedSource: null,
-        amountStr: "0",
-        timer: null,
-        countdownVal: 5.0,
-        timerInterval: null,
-        hoveredElement: null
-    };
-
-    const crazyOverlay = document.getElementById('crazy-overlay');
-    const circleRingContainer = document.getElementById('circle-ring-container');
-    const circlesWrapper = document.getElementById('circles-wrapper');
-    const numpadView = document.getElementById('crazy-numpad-view');
-    const amountDisplay = document.getElementById('crazy-amount-val');
-    const timerBar = document.getElementById('crazy-timer-bar');
-    const timerText = document.getElementById('crazy-timer-text');
-
-    function positionRingOnFab() {
-        const fabBtn = document.getElementById('btn-open-add');
-        const rect = fabBtn.getBoundingClientRect();
-        const fabCenterX = rect.left + rect.width / 2;
-        const fabCenterY = rect.top + rect.height / 2;
-
-        circleRingContainer.style.left = `${fabCenterX}px`;
-        circleRingContainer.style.top = `${fabCenterY}px`;
-    }
-
-    function setupCrazyGestureFlow() {
-        const fabBtn = document.getElementById('btn-open-add');
-        let pressTimer = null;
-        let isHolding = false;
-
-        const startHold = (e) => {
-            isHolding = false;
-            fabBtn.classList.add('holding');
-
-            pressTimer = setTimeout(() => {
-                isHolding = true;
-                if (navigator.vibrate) navigator.vibrate(40);
-                openCrazyOverlay(1);
-            }, 180);
-        };
-
-        const cancelHold = (e) => {
-            fabBtn.classList.remove('holding');
-            if (pressTimer) clearTimeout(pressTimer);
-        };
-
-        fabBtn.addEventListener('pointerdown', startHold);
-        fabBtn.addEventListener('pointerup', (e) => {
-            cancelHold();
-            if (!isHolding && !crazyOverlay.classList.contains('active')) {
-                openCrazyOverlay(1);
-            }
-        });
-        fabBtn.addEventListener('pointercancel', cancelHold);
-
-        // Track drag gestures over circle choices
-        document.addEventListener('pointermove', (e) => {
-            if (!crazyOverlay.classList.contains('active') || crazyState.step === 3) return;
-
-            const target = document.elementFromPoint(e.clientX, e.clientY);
-            const circle = target ? target.closest('.gesture-circle-item') : null;
-
-            if (crazyState.hoveredElement !== circle) {
-                if (crazyState.hoveredElement) {
-                    crazyState.hoveredElement.classList.remove('hovered');
-                }
-                crazyState.hoveredElement = circle;
-                if (circle) {
-                    circle.classList.add('hovered');
-                    if (navigator.vibrate) navigator.vibrate(15);
-                    updateCenterIndicator(circle.dataset.name, circle.dataset.icon);
-                } else {
-                    resetCenterIndicator();
-                }
-            }
-        });
-
-        document.addEventListener('pointerup', (e) => {
-            if (!crazyOverlay.classList.contains('active') || crazyState.step === 3) return;
-
-            if (crazyState.hoveredElement) {
-                const item = crazyState.hoveredElement;
-                crazyState.hoveredElement.classList.remove('hovered');
-                crazyState.hoveredElement = null;
-
-                if (crazyState.step === 1) {
-                    crazyState.selectedCategory = item.dataset.name;
-                    crazyState.selectedType = item.dataset.type || 'Needs';
-                    openCrazyOverlay(2);
-                } else if (crazyState.step === 2) {
-                    crazyState.selectedSource = item.dataset.name;
-                    openCrazyOverlay(3);
-                }
-            }
-        });
-
-        document.getElementById('btn-close-crazy').onclick = closeCrazyOverlay;
-
-        document.querySelectorAll('.num-btn').forEach(btn => {
-            btn.onclick = () => {
-                const key = btn.dataset.key;
-                handleNumpadInput(key);
-            };
-        });
-    }
-
-    function openCrazyOverlay(step) {
-        crazyState.step = step;
-        crazyOverlay.classList.add('active');
-
-        if (step === 1 || step === 2) {
-            positionRingOnFab();
-            circleRingContainer.style.display = 'flex';
-            numpadView.classList.remove('active');
-            resetCenterIndicator();
-        }
-
-        if (step === 1) {
-            document.getElementById('crazy-step-badge').textContent = "Step 1 of 2";
-            document.getElementById('crazy-title').textContent = "Slide to Category";
-            document.getElementById('crazy-subtitle').textContent = "Hold & slide thumb over a category circle";
-            renderCategoryCircles();
-        } else if (step === 2) {
-            document.getElementById('crazy-step-badge').textContent = "Step 2 of 2";
-            document.getElementById('crazy-title').textContent = "Slide to Payment Source";
-            document.getElementById('crazy-subtitle').textContent = "Hold & slide thumb over a payment circle";
-            renderSourceCircles();
-        } else if (step === 3) {
-            document.getElementById('crazy-step-badge').textContent = "Step 3";
-            document.getElementById('crazy-title').textContent = "Enter Amount";
-            document.getElementById('crazy-subtitle').textContent = "Auto-saves 5s after last tap";
-
-            circleRingContainer.style.display = 'none';
-            numpadView.classList.add('active');
-
-            document.getElementById('summary-cat-text').textContent = crazyState.selectedCategory;
-            const catMeta = ICON_MAP[crazyState.selectedCategory] || ICON_MAP.Default;
-            document.getElementById('summary-cat-badge').querySelector('i').className = `fa-solid ${catMeta.icon}`;
-
-            document.getElementById('summary-src-text').textContent = crazyState.selectedSource;
-            const srcMeta = ICON_MAP[crazyState.selectedSource] || ICON_MAP.Default;
-            document.getElementById('summary-src-badge').querySelector('i').className = `fa-solid ${srcMeta.icon}`;
-
-            crazyState.amountStr = "0";
-            updateAmountDisplay();
-            reset5SecTimer();
-        }
-    }
-
-    function renderCategoryCircles() {
-        circlesWrapper.innerHTML = '';
-        let items = [];
-
-        Object.keys(CATEGORIES_CONFIG).forEach(type => {
-            CATEGORIES_CONFIG[type].forEach(sub => {
-                items.push({ name: sub, type: type });
-            });
-        });
-
-        const maxItems = Math.min(items.length, 10);
-        const radius = 135; // Radial arc distance centered from the + button
-
-        // Arch upward above the button (-165deg to -15deg)
-        const startAngle = -Math.PI * 0.92;
-        const endAngle = -Math.PI * 0.08;
-
-        for (let i = 0; i < maxItems; i++) {
-            const item = items[i];
-            const meta = ICON_MAP[item.name] || ICON_MAP.Default;
-            const angle = maxItems === 1
-                ? -Math.PI / 2
-                : startAngle + (i / (maxItems - 1)) * (endAngle - startAngle);
-
-            const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius;
-
-            const el = document.createElement('div');
-            el.className = 'gesture-circle-item';
-            el.dataset.name = item.name;
-            el.dataset.type = item.type;
-            el.dataset.icon = meta.icon;
-            el.style.setProperty('--tx', `${x}px`);
-            el.style.setProperty('--ty', `${y}px`);
-            el.style.transform = `translate(${x}px, ${y}px)`;
-            el.style.background = meta.bg;
-            el.style.color = meta.color;
-            el.style.borderColor = meta.color;
-            el.innerHTML = `
-                <i class="fa-solid ${meta.icon}"></i>
-                <div class="item-label">${item.name}</div>
-            `;
-
-            el.onclick = () => {
-                crazyState.selectedCategory = item.name;
-                crazyState.selectedType = item.type;
-                openCrazyOverlay(2);
-            };
-
-            circlesWrapper.appendChild(el);
-        }
-    }
-
-    function renderSourceCircles() {
-        circlesWrapper.innerHTML = '';
-        const items = PAYMENT_SOURCES_CONFIG;
-        const maxItems = Math.min(items.length, 8);
-        const radius = 135;
-
-        const startAngle = -Math.PI * 0.90;
-        const endAngle = -Math.PI * 0.10;
-
-        for (let i = 0; i < maxItems; i++) {
-            const srcName = items[i];
-            const meta = ICON_MAP[srcName] || ICON_MAP.Default;
-            const angle = maxItems === 1
-                ? -Math.PI / 2
-                : startAngle + (i / (maxItems - 1)) * (endAngle - startAngle);
-
-            const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius;
-
-            const el = document.createElement('div');
-            el.className = 'gesture-circle-item';
-            el.dataset.name = srcName;
-            el.dataset.icon = meta.icon;
-            el.style.setProperty('--tx', `${x}px`);
-            el.style.setProperty('--ty', `${y}px`);
-            el.style.transform = `translate(${x}px, ${y}px)`;
-            el.style.background = meta.bg;
-            el.style.color = meta.color;
-            el.style.borderColor = meta.color;
-            el.innerHTML = `
-                <i class="fa-solid ${meta.icon}"></i>
-                <div class="item-label">${srcName}</div>
-            `;
-
-            el.onclick = () => {
-                crazyState.selectedSource = srcName;
-                openCrazyOverlay(3);
-            };
-
-            circlesWrapper.appendChild(el);
-        }
-    }
-
-    function updateCenterIndicator(name, icon) {
-        const centerIcon = document.getElementById('center-icon');
-        const centerText = document.getElementById('center-text');
-        centerIcon.className = `fa-solid ${icon}`;
-        centerText.textContent = name;
-    }
-
-    function resetCenterIndicator() {
-        const centerIcon = document.getElementById('center-icon');
-        const centerText = document.getElementById('center-text');
-        centerIcon.className = "fa-solid fa-hand-pointer";
-        centerText.textContent = "SLIDE";
-    }
-
-    function handleNumpadInput(key) {
-        if (key === 'backspace') {
-            if (crazyState.amountStr.length > 1) {
-                crazyState.amountStr = crazyState.amountStr.slice(0, -1);
-            } else {
-                crazyState.amountStr = "0";
-            }
-        } else if (key === '.') {
-            if (!crazyState.amountStr.includes('.')) {
-                crazyState.amountStr += '.';
-            }
-        } else {
-            if (crazyState.amountStr === '0') {
-                crazyState.amountStr = key;
-            } else {
-                crazyState.amountStr += key;
-            }
-        }
-
-        updateAmountDisplay();
-        reset5SecTimer();
-    }
-
-    function updateAmountDisplay() {
-        amountDisplay.textContent = `₹${crazyState.amountStr}`;
-    }
-
-    function reset5SecTimer() {
-        if (crazyState.timerInterval) clearInterval(crazyState.timerInterval);
-        crazyState.countdownVal = 5.0;
-        timerBar.style.width = '100%';
-        timerText.textContent = `Saving automatically in 5.0s after last tap...`;
-
-        const startTime = Date.now();
-        const totalDuration = 5000;
-
-        crazyState.timerInterval = setInterval(() => {
-            const elapsed = Date.now() - startTime;
-            const remaining = Math.max(0, totalDuration - elapsed);
-            const percentage = (remaining / totalDuration) * 100;
-            const seconds = (remaining / 1000).toFixed(1);
-
-            timerBar.style.width = `${percentage}%`;
-            timerText.textContent = `Saving automatically in ${seconds}s after last tap...`;
-
-            if (remaining <= 0) {
-                clearInterval(crazyState.timerInterval);
-                saveCrazyExpense();
-            }
-        }, 50);
-    }
-
-    async function saveCrazyExpense() {
-        const finalAmount = parseFloat(crazyState.amountStr) || 0;
-        if (finalAmount <= 0) {
-            closeCrazyOverlay();
-            return;
-        }
-
-        const newExpense = {
-            id: generateUUID(),
-            date: new Date().toISOString().split('T')[0],
-            amount: finalAmount,
-            type: crazyState.selectedType || 'Needs',
-            subcategory: crazyState.selectedCategory,
-            source: crazyState.selectedSource
-        };
-
-        state.expenses.push(newExpense);
-        await syncDataToStub();
-
-        timerText.textContent = `Saved ₹${finalAmount.toFixed(2)} successfully!`;
-        timerBar.style.background = '#10b981';
-
-        setTimeout(() => {
-            closeCrazyOverlay();
-        }, 400);
-    }
-
-    function closeCrazyOverlay() {
-        if (crazyState.timerInterval) clearInterval(crazyState.timerInterval);
-        crazyOverlay.classList.remove('active');
-    }
-
     function setupEventListeners() {
         btnMenu.onclick = () => {
             sidebar.classList.add('open');
@@ -1940,6 +1048,7 @@
             setTimeout(() => btnRefresh.querySelector('i').classList.remove('fa-spin'), 400);
         };
 
+        btnOpenAdd.onclick = openAddModal;
         btnCloseModal.onclick = closeModal;
         btnCloseView.onclick = closeViewModal;
 
@@ -1948,15 +1057,6 @@
             closeViewModal();
             if (itemToEdit) openEditModal(itemToEdit);
         };
-
-        document.getElementById('btn-export-this-month').onclick = (e) => handleExport('this-month', 'download', e.currentTarget);
-        document.getElementById('btn-copy-this-month').onclick = (e) => handleExport('this-month', 'copy', e.currentTarget);
-
-        document.getElementById('btn-export-last-month').onclick = (e) => handleExport('last-month', 'download', e.currentTarget);
-        document.getElementById('btn-copy-last-month').onclick = (e) => handleExport('last-month', 'copy', e.currentTarget);
-
-        document.getElementById('btn-export-overall').onclick = (e) => handleExport('overall', 'download', e.currentTarget);
-        document.getElementById('btn-copy-overall').onclick = (e) => handleExport('overall', 'copy', e.currentTarget);
 
         formExpense.onsubmit = async (e) => {
             e.preventDefault();
@@ -1981,7 +1081,7 @@
                     };
                 }
             } else {
-                const newId = generateUUID();
+                const newId = Date.now().toString();
                 state.expenses.push({
                     id: newId,
                     date,
